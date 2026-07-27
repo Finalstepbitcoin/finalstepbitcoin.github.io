@@ -14,6 +14,10 @@ marchio-alternativo-a-gradini/
 # la foto del prodotto BitBox: non e' usata dal sito
 img/BITBOX.jpg
 
+# la copia pronta da caricare su Nostr (nsite): sono gli stessi file del
+# sito, gia' presenti qui sopra. Serve solo da trascinare nel deployer.
+sito-per-nostr/
+
 # i file invisibili che macOS semina in ogni cartella
 .DS_Store
 ._*
