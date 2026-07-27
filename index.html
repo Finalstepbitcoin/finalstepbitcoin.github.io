@@ -1468,71 +1468,125 @@ footer{border-top:1px solid var(--line);background:rgba(0,0,0,.28)}
   var ATTESA_RELAY = 7000;   /* oltre questo, ci si accontenta di ciò che è arrivato */
   var box = document.getElementById('artbox');
 
-  function daiRelay(){
-    if (typeof WebSocket === 'undefined') return Promise.resolve([]);
-    return new Promise(function(risolvi){
-      var trovati = {};        /* chiave: l'identificativo "d" dell'articolo */
-      var rimasti = RELAY.length;
-      var finito = false;
+  /* L'ARCHIVIO IN MEMORIA. Tutto quello che si è saputo dai relay finora,
+     con l'identificativo "d" dell'articolo come chiave. Ci scrivono sopra
+     tutti i relay: chi arriva secondo con lo stesso articolo non fa danni. */
+  var trovati = {};
 
-      function chiudi(){
-        if (finito) return;
-        finito = true;
-        var lista = [];
-        for (var k in trovati) {
-          if (Object.prototype.hasOwnProperty.call(trovati, k)) lista.push(trovati[k]);
-        }
-        /* dal più recente al più vecchio */
-        lista.sort(function(a, b){ return b.quando - a.quando; });
-        risolvi(lista);
-      }
-      var scadenza = setTimeout(chiudi, ATTESA_RELAY);
-      function unoInMeno(){
-        rimasti--;
-        if (rimasti <= 0) { clearTimeout(scadenza); chiudi(); }
-      }
+  function elencoOrdinato(){
+    var lista = [];
+    for (var k in trovati) {
+      if (Object.prototype.hasOwnProperty.call(trovati, k)) lista.push(trovati[k]);
+    }
+    /* dal più recente al più vecchio */
+    lista.sort(function(a, b){ return b.quando - a.quando; });
+    return lista;
+  }
 
-      RELAY.forEach(function(indirizzo){
-        var ws;
-        try { ws = new WebSocket(indirizzo); } catch (e) { unoInMeno(); return; }
-        var chiuso = false;
-        function saluta(){ if (chiuso) return; chiuso = true; try { ws.close(); } catch (e) {} unoInMeno(); }
-        /* un relay lento non deve tenere in ostaggio gli altri */
-        setTimeout(saluta, ATTESA_RELAY);
+  /* Registra un evento. Torna true solo se ha cambiato qualcosa: serve a
+     non ridisegnare la sezione ogni volta che un relay ripete un articolo
+     che sappiamo già. */
+  function registra(e){
+    function tag(nome){
+      var t = (e.tags || []).filter(function(x){ return x[0] === nome; })[0];
+      return t ? t[1] : '';
+    }
+    var d = tag('d');
+    var titolo = (tag('title') || '').replace(/\s+/g, ' ').trim();
+    if (!d || !titolo) return false;
+    /* se due relay hanno lo stesso articolo tengo la versione firmata più
+       di recente: è quella corretta dall'autore */
+    if (trovati[d] && trovati[d].firmato >= e.created_at) return false;
+    trovati[d] = {
+      url: SITO_ARTICOLI + encodeURIComponent(d) + '.html',
+      title: titolo,
+      copertina: tag('image'),
+      quando: parseInt(tag('published_at'), 10) || e.created_at || 0,
+      firmato: e.created_at
+    };
+    return true;
+  }
 
-        ws.onopen = function(){
-          ws.send(JSON.stringify(['REQ', 'fsb', {authors:[CHIAVE], kinds:[30023], limit:20}]));
-        };
-        ws.onerror = saluta;
-        ws.onclose = saluta;
-        ws.onmessage = function(ev){
-          var m;
-          try { m = JSON.parse(ev.data); } catch (e) { return; }
-          if (m[0] === 'EOSE' || m[0] === 'CLOSED') { saluta(); return; }
-          if (m[0] !== 'EVENT' || !m[2] || m[2].kind !== 30023) return;
-          var e = m[2];
-          function tag(nome){
-            var t = (e.tags || []).filter(function(x){ return x[0] === nome; })[0];
-            return t ? t[1] : '';
-          }
-          var d = tag('d');
-          var titolo = (tag('title') || '').replace(/\s+/g, ' ').trim();
-          if (!d || !titolo) return;
-          var quando = parseInt(tag('published_at'), 10) || e.created_at || 0;
-          /* se due relay hanno lo stesso articolo tengo la versione
-             firmata più di recente: è quella corretta dall'autore */
-          if (trovati[d] && trovati[d].firmato >= e.created_at) return;
-          trovati[d] = {
-            url: SITO_ARTICOLI + encodeURIComponent(d) + '.html',
-            title: titolo,
-            copertina: tag('image'),
-            quando: quando,
-            firmato: e.created_at
-          };
-        };
-      });
+  /* ── ASCOLTO PERMANENTE ──
+     La differenza con una lettura secca: la connessione ai relay NON si
+     chiude dopo la prima risposta, resta aperta in ascolto. Un relay, a
+     sottoscrizione aperta, spinge da solo gli eventi nuovi che rientrano
+     nella richiesta. Quindi quando pubblichi un articolo, chi ha la pagina
+     aperta in quel momento se lo vede comparire senza toccare niente.
+
+     Il primo disegno però non può aspettare all'infinito: si parte appena
+     tutti i relay hanno detto "ti ho mandato tutto quello che ho" (EOSE),
+     o comunque dopo sette secondi. Da lì in poi ogni novità ridisegna. */
+  var connessioni = [];
+  var giaDisegnato = false;
+
+  function chiudiTutto(){
+    connessioni.forEach(function(ws){ try { ws.close(); } catch (e) {} });
+    connessioni = [];
+  }
+
+  function ascolta(alPrimoGiro){
+    if (typeof WebSocket === 'undefined') { if (alPrimoGiro) alPrimoGiro(); return; }
+    var rimasti = RELAY.length;
+    var partito = false;
+    function via(){
+      if (partito || !alPrimoGiro) return;
+      partito = true;
+      alPrimoGiro();
+    }
+    var scadenza = setTimeout(via, ATTESA_RELAY);
+    function unoHaFinito(){
+      rimasti--;
+      if (rimasti <= 0) { clearTimeout(scadenza); via(); }
+    }
+
+    RELAY.forEach(function(indirizzo){
+      var ws;
+      try { ws = new WebSocket(indirizzo); } catch (e) { unoHaFinito(); return; }
+      connessioni.push(ws);
+      var contato = false;
+      function conta(){ if (contato) return; contato = true; unoHaFinito(); }
+      /* un relay muto non deve tenere in ostaggio gli altri */
+      setTimeout(conta, ATTESA_RELAY);
+
+      ws.onopen = function(){
+        ws.send(JSON.stringify(['REQ', 'fsb', {authors:[CHIAVE], kinds:[30023], limit:20}]));
+      };
+      /* attenzione: qui NON si chiude la connessione. Un errore o una
+         chiusura contano solo come "questo relay ha finito di parlare". */
+      ws.onerror = conta;
+      ws.onclose = conta;
+      ws.onmessage = function(ev){
+        var m;
+        try { m = JSON.parse(ev.data); } catch (e) { return; }
+        if (m[0] === 'EOSE') { conta(); return; }
+        if (m[0] === 'CLOSED') { conta(); return; }
+        if (m[0] !== 'EVENT' || !m[2] || m[2].kind !== 30023) return;
+        var novita = registra(m[2]);
+        /* dopo il primo disegno, ogni novità aggiorna la pagina al volo */
+        if (novita && giaDisegnato) disegnaSePossibile();
+      };
     });
   }
+
+  /* Rete di sicurezza. Le connessioni possono morire in silenzio: il Mac
+     va in stop, il telefono cambia rete, il relay si riavvia. Ogni dieci
+     minuti si ricomincia da capo con connessioni nuove. E quando torni
+     sulla scheda dopo averla lasciata da parte, si ricontrolla subito. */
+  var RIPASSO = 600000;
+  function ricomincia(){
+    chiudiTutto();
+    ascolta(null);
+  }
+  setInterval(ricomincia, RIPASSO);
+  var ultimoRitorno = 0;
+  document.addEventListener('visibilitychange', function(){
+    if (document.hidden) return;
+    var ora = Date.now();
+    if (ora - ultimoRitorno < 60000) return;   /* non a ogni cambio di scheda */
+    ultimoRitorno = ora;
+    ricomincia();
+  });
 
   /* La vecchia strada, tenuta come ripiego: si legge la pagina del sito
      e si raccolgono i link agli articoli. */
@@ -1624,18 +1678,36 @@ footer{border-top:1px solid var(--line);background:rgba(0,0,0,.28)}
     box.innerHTML = '<div class="arts">' + rows + '</div>';
   }
 
-  daiRelay()
-    .then(function(lista){
-      if (lista.length) return mostraArticoli(lista);
-      return dallaPagina().then(mostraArticoli);
-    })
-    .catch(function(){
-      return dallaPagina().then(mostraArticoli);
-    })
-    .catch(function(){
-      box.innerHTML = '<div class="loading">Non riesco a caricare gli articoli adesso. ' +
-        '<a href="' + FEED + '" target="_blank" rel="noopener">Leggili su news.21milioni.com ↗</a></div>';
-    });
+  /* Ridisegna solo se cambia davvero quello che si vede. Senza questo
+     controllo, un relay che ripete i suoi articoli farebbe ricostruire la
+     sezione da zero, con le immagini che sfarfallano sotto gli occhi. */
+  var ultimaFirma = '';
+  function disegnaSePossibile(){
+    var lista = elencoOrdinato();
+    if (!lista.length) return;
+    var firma = lista.slice(0, 6).map(function(p){ return p.quando + p.title; }).join('|');
+    if (firma === ultimaFirma) return;
+    ultimaFirma = firma;
+    mostraArticoli(lista);
+    giaDisegnato = true;
+  }
+
+  /* Il via. Si apre l'ascolto sui relay; al primo giro, se è arrivato
+     qualcosa lo si disegna, altrimenti si ripiega sulla pagina del sito.
+     L'ascolto però resta acceso in entrambi i casi: se i relay si
+     svegliano dopo, gli articoli veri prendono il posto del ripiego. */
+  ascolta(function(){
+    if (elencoOrdinato().length) { disegnaSePossibile(); return; }
+    dallaPagina()
+      .then(function(posts){
+        mostraArticoli(posts);
+        giaDisegnato = true;
+      })
+      .catch(function(){
+        box.innerHTML = '<div class="loading">Non riesco a caricare gli articoli adesso. ' +
+          '<a href="' + FEED + '" target="_blank" rel="noopener">Leggili su news.21milioni.com ↗</a></div>';
+      });
+  });
 })();
 </script>
 </body>
