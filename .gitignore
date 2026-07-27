@@ -1,0 +1,19 @@
+# Cosa NON finisce online.
+# Il repository e' pubblico, quindi qui dentro ci va solo il necessario
+# al sito: tutto il resto e' materiale di lavoro e resta sul tuo Mac.
+
+# le immagini sorgente ad alta risoluzione (decine di MB)
+originali/
+
+# le versioni precedenti del sito e i backup delle immagini
+versioni/
+
+# le prove sul marchio alternativo
+marchio-alternativo-a-gradini/
+
+# la foto del prodotto BitBox: non e' usata dal sito
+img/BITBOX.jpg
+
+# i file invisibili che macOS semina in ogni cartella
+.DS_Store
+._*

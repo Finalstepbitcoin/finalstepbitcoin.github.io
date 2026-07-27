@@ -1,0 +1,28 @@
+LOGHI DEGLI SPONSOR
+===================
+
+Sono gia' tutti presenti. Da dove arrivano (27 luglio 2026):
+
+  bitbox.png        <- bitbox.swiss, icona 196px versione chiara
+  bitcashback.png   <- bitcashback.net, icona 180px
+  bitcare-forum.png <- bitcareforum.it, icona 300px (fondo nero reso
+                       trasparente, altrimenti nel riquadro si vedeva
+                       un quadrato piu' scuro)
+  btc-prague.png    <- btcprague.com, icona 192px
+  hodl-hodl.png     <- hodlhodl.com, icona 180px
+  bull-bitcoin.png  <- bullbitcoin.com, ritagliato dal logo orizzontale
+                       per tenere solo la testa di toro rossa
+
+Tutti ridimensionati a 144px: e' il triplo del riquadro da 48px, cioe'
+quello che serve per restare nitidi sugli schermi Retina.
+
+Per SOSTITUIRNE uno, salva il nuovo file con lo stesso nome esatto.
+
+Regole pratiche:
+- Immagine quadrata (es. 200x200 px), sfondo trasparente se possibile.
+- Il logo viene rimpicciolito dentro un riquadro di 48x48 px, quindi
+  evita loghi con scritte lunghe e piccole: si leggerebbero male.
+- Se un file manca, la scheda resta com'e' oggi (sigla + nome + sconto):
+  non compare nessun quadrato vuoto. Puoi quindi aggiungerli uno alla volta.
+- Se vuoi usare .jpg o .webp invece di .png devi cambiare il nome del file
+  anche dentro index.html, nella sezione SUPPORTAMI.

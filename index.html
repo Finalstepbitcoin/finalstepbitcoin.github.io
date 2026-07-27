@@ -1,0 +1,1642 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Final Step Bitcoin — PLAK</title>
+<meta name="description" content="Dal baratto al P2P Electronic Cash System. Tutorial, storia di Bitcoin, Lightning Network e Nostr. Il canale YouTube di PLAK.">
+<meta property="og:title" content="Final Step Bitcoin — PLAK">
+<meta property="og:description" content="Dal baratto al P2P Electronic Cash System. Tutorial, storia di Bitcoin, Lightning Network e Nostr.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0A0908">
+<link rel="icon" href="img/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════════════
+   FINAL STEP BITCOIN
+   I due colori di marca sono MISURATI dal logo del canale:
+     #F6670E  arancione delle lettere di "FINAL STEP BITCOIN"
+     #FFD300  giallo della saetta che fa da S
+   Le sfumature vivono solo fra questi due. Nessun altro colore
+   entra nella rampa: è ciò che tiene l'identità riconoscibile.
+   Il fondo resta piatto — se sfuma anche quello, si perde tutto.
+   ═══════════════════════════════════════════════════════════ */
+:root{
+  /* Il fondo e' un nero profondo, appena scaldato: non e' #000 puro
+     (che su schermo OLED spegne i pixel e fa "saltare" i bordi delle
+     sezioni), ma ci sta molto vicino. Piu' e' scuro il fondo, piu' i
+     fulmini e i colori di marca risaltano senza doverli alzare. */
+  --ink:#0A0908;
+  --ink-2:#141211;
+  --ink-3:#1C1918;
+  --line:#2B2724;
+  --line-2:#3F3934;
+  --bone:#F0EDE6;
+  --mute:#BDB6A9;      /* 7.9:1 anche sul punto piu chiaro del fondo */
+  --mute-2:#A8A093;    /* 6.1:1 anche sul punto piu chiaro del fondo */
+
+  --orange:#F6670E;
+  --yellow:#FFD300;
+  --amber:#FA9D07;              /* il punto di mezzo esatto della rampa */
+  --grad:linear-gradient(100deg,var(--yellow) 0%,var(--amber) 52%,var(--orange) 100%);
+  --grad-soft:linear-gradient(100deg,rgba(255,211,0,.16),rgba(246,103,14,.16));
+
+  --display:"Figtree","Avenir Next","Century Gothic",system-ui,sans-serif;
+  --body:"Barlow","Avenir Next",system-ui,-apple-system,sans-serif;
+  --mono:"IBM Plex Mono","Menlo",ui-monospace,monospace;
+
+  --nav-h:78px;
+  --gutter:clamp(20px,5vw,60px);
+  --max:1140px;
+  --r:12px;
+  --r-sm:8px;
+}
+
+/* ─── SFONDO A STRATI ───
+   Un fondo a tinta unita e' piatto. Qui ci sono quattro strati fissi
+   dietro tutto: aloni ampi, i fulmini del logo, macchie sfocate e una
+   grana. Nessuno si nota da solo, insieme danno movimento.
+   Gli aloni usano SOLO l'arancione e il giallo della marca. */
+.sfondo{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
+.sfondo::before{
+  /* aloni ampi, in posizioni volutamente asimmetriche */
+  content:"";position:absolute;inset:0;
+  background:
+    radial-gradient(82% 52% at 12% -8%, rgba(246,103,14,.04), transparent 60%),
+    radial-gradient(64% 46% at 88% 12%, rgba(255,211,0,.03), transparent 62%),
+    radial-gradient(58% 44% at 72% 76%, rgba(246,103,14,.03), transparent 64%),
+    radial-gradient(50% 38% at 8% 92%, rgba(250,157,7,.02), transparent 66%);
+}
+/* I FULMINI. Coprono tutto lo schermo, testo compreso: niente maschera.
+   Il file e' stato RIFATTO dal sorgente: la vecchia versione portava
+   la grana della foto dentro il canale di trasparenza, e a schermo si
+   vedeva come una nuvola di puntini sporchi attorno ai rami piu'
+   luminosi. Ora la trasparenza e' pulita e il colore e' l'ambra della
+   marca, quindi niente piu' aloni grigi.
+   Con la trasparenza pulita e il fondo piu' scuro il 17% e' ancora
+   ampiamente sopra i minimi di leggibilita' (il testo piu' tenue resta
+   a 6:1 anche dove passa il ramo piu' luminoso). Oltre il 22% comincia
+   a rubare attenzione al contenuto. */
+.fulmini{
+  position:absolute;inset:0;
+  background-image:url("img/fulmini.webp?v=3");
+  background-repeat:no-repeat;
+  background-position:center 42%;
+  background-size:cover;
+  opacity:.17;
+}
+.aurora{
+  position:absolute;width:60vw;height:52vh;border-radius:50%;
+  filter:blur(80px);opacity:.5;
+}
+.aurora--1{top:-14vh;left:-8vw;background:radial-gradient(closest-side,rgba(246,103,14,.05),transparent 70%)}
+.aurora--2{top:34vh;right:-14vw;background:radial-gradient(closest-side,rgba(255,211,0,.05),transparent 72%)}
+/* La grana non serve a "dare texture": serve solo a rompere le fasce
+   circolari che gli schermi a 8 bit disegnano dentro gli aloni sfumati.
+   A .035 si vedeva ed era proprio l'effetto sporco da togliere; a .012
+   fa ancora il suo lavoro senza che l'occhio la registri. Se la vuoi
+   sparita del tutto, metti 0. */
+.grana{
+  position:absolute;inset:0;opacity:.012;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+@media(prefers-reduced-motion:no-preference){
+  .aurora--1{animation:deriva1 34s ease-in-out infinite alternate}
+  .aurora--2{animation:deriva2 42s ease-in-out infinite alternate}
+}
+@keyframes deriva1{to{transform:translate3d(7vw,5vh,0) scale(1.12)}}
+@keyframes deriva2{to{transform:translate3d(-6vw,-4vh,0) scale(1.08)}}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:calc(var(--nav-h) + 10px)}
+body{
+  background:var(--ink);color:var(--bone);
+  font-family:var(--body);font-size:17.5px;line-height:1.65;
+  overflow-x:hidden;-webkit-font-smoothing:antialiased;
+}
+img,svg{max-width:100%;display:block}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--yellow);outline-offset:3px}
+::selection{background:var(--orange);color:var(--ink)}
+::-webkit-scrollbar{width:10px}
+::-webkit-scrollbar-track{background:var(--ink)}
+::-webkit-scrollbar-thumb{background:var(--line-2);border-radius:5px}
+::-webkit-scrollbar-thumb:hover{background:var(--orange)}
+
+/* ─────────── PRIMITIVE ─────────── */
+.wrap{max-width:var(--max);margin-inline:auto;padding-inline:var(--gutter)}
+.sec{padding-block:clamp(60px,8vw,108px)}
+.sec--alt{background:rgba(255,255,255,.022)}
+.rule{border:0;border-top:1px solid var(--line)}
+
+/* la fascia di segnalazione: le strisce restano, ma il colore
+   le attraversa come una rampa continua da giallo ad arancione */
+.hazard{
+  height:10px;flex:none;
+  background:
+    repeating-linear-gradient(115deg,transparent 0 20px,var(--ink) 20px 30px),
+    var(--grad);
+}
+
+h1,h2,h3{font-family:var(--display);font-weight:600;text-transform:uppercase;text-wrap:balance;line-height:1.03}
+h1{font-size:clamp(40px,8.4vw,90px);letter-spacing:-.012em}
+h2{font-size:clamp(28px,4.4vw,46px);letter-spacing:.004em}
+h3{font-size:clamp(17px,1.7vw,20px);letter-spacing:.02em;line-height:1.22}
+p{margin-bottom:1em}
+p:last-child{margin-bottom:0}
+
+/* testo in sfumatura — con colore pieno di ripiego se il browser non regge */
+.grad-text{
+  color:var(--orange);
+  background:var(--grad);
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+.sec-head{margin-bottom:clamp(34px,4.5vw,52px)}
+.lede{font-size:clamp(17.5px,1.9vw,20px);line-height:1.62;color:var(--mute);max-width:60ch}
+.note{font-size:16.5px;color:var(--mute);line-height:1.74}
+em{font-style:normal;color:var(--yellow);font-weight:500}
+strong{color:var(--bone);font-weight:600}
+
+/* ─────────── BOTTONI ─────────── */
+.btn{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:14px 27px;border-radius:var(--r-sm);
+  font-family:var(--display);font-weight:600;font-size:14px;
+  letter-spacing:.09em;text-transform:uppercase;text-decoration:none;
+  border:1px solid transparent;cursor:pointer;
+  transition:transform .18s ease,box-shadow .25s ease,border-color .18s,color .18s;
+}
+.btn--fill{background:var(--grad);color:#1A0E00;box-shadow:0 6px 22px -8px rgba(250,157,7,.55)}
+.btn--fill:hover{transform:translateY(-2px);box-shadow:0 12px 32px -10px rgba(250,157,7,.75)}
+.btn--line{background:transparent;color:var(--bone);border-color:var(--line-2)}
+.btn--line:hover{border-color:var(--amber);color:var(--amber);transform:translateY(-2px)}
+
+/* ─────────── NAV ─────────── */
+.nav-shell{position:fixed;top:0;left:0;right:0;z-index:100}
+nav{
+  height:var(--nav-h);background:rgba(19,17,16,.9);
+  border-bottom:1px solid var(--line);
+  display:flex;align-items:center;justify-content:space-between;
+  padding-inline:var(--gutter);gap:20px;
+}
+@supports (backdrop-filter:blur(2px)){nav{backdrop-filter:blur(16px) saturate(140%)}}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;flex:none}
+/* solo la piastrella del logo ha bordo e angoli arrotondati:
+   se la regola vale per tutte le immagini, disegna un riquadro
+   anche attorno alla scritta */
+.brand .marchio{
+  width:34px;height:34px;flex:none;
+  border-radius:9px;border:1px solid var(--line-2);
+}
+/* la scritta è il lettering originale del canale, con la S a saetta,
+   ritagliata dal banner e scontornata dallo sfondo con i fulmini */
+.brand .scritta{height:42px;width:auto;flex:none;border:0;border-radius:0}
+footer .brand .scritta{height:32px}
+.nav-links{display:flex;align-items:center;gap:2px}
+.nav-links a{
+  position:relative;
+  font-family:var(--mono);font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--mute);text-decoration:none;padding:9px 13px;border-radius:var(--r-sm);
+  transition:color .18s,background .18s;
+}
+.nav-links a:hover{color:var(--bone);background:var(--ink-3)}
+.nav-links a.on{color:var(--bone)}
+.nav-links a.on::after{
+  content:"";position:absolute;left:13px;right:13px;bottom:2px;height:2px;
+  border-radius:2px;background:var(--grad);
+}
+.burger{
+  display:none;background:none;border:1px solid var(--line-2);border-radius:var(--r-sm);
+  color:var(--bone);width:40px;height:36px;cursor:pointer;font-size:15px;line-height:1;
+}
+
+/* ─────────── HERO ─────────── */
+#home{padding-top:calc(var(--nav-h) + 10px)}
+.hero{position:relative;padding-block:clamp(48px,7vw,90px) clamp(40px,6vw,72px);overflow:hidden}
+/* alone caldo, appena percettibile: dà profondità senza sporcare il fondo */
+.hero::before{
+  content:"";position:absolute;left:-15%;top:-25%;width:85%;height:105%;
+  background:radial-gradient(closest-side,rgba(250,157,7,.13),transparent 72%);
+  pointer-events:none;z-index:0;
+}
+.hero > *{position:relative;z-index:1}
+/* IL LOGO IN APERTURA. Su schermo largo è la scritta su una riga; sotto
+   i 640px il <picture> passa al file con una parola per riga, che a pari
+   larghezza rende le lettere più del doppio: 59px di altezza contro 24. */
+/* Sorgente nativa 1219px (il file trasparente ad alta risoluzione), quindi
+   a 980px siamo a 0.80x in scala normale e 1.61x su Retina: piu' grande
+   E piu' nitida di quanto si potesse fare col vecchio file da 982px. */
+.hero-logo{
+  width:clamp(300px,78vw,980px);height:auto;
+  margin-bottom:clamp(22px,3vw,38px);
+}
+/* Due immagini commutate dal CSS, non un <picture>: al ridimensionamento
+   il browser NON riscarica la sorgente di un <picture>, quindi un telefono
+   ruotato in orizzontale si ritrovava la versione a tre righe ingrandita
+   2.7x. Il CSS invece si rivaluta sempre. */
+.hero-logo--righe{display:none}
+@media(max-width:640px){
+  .hero-logo--riga{display:none}
+  /* la versione a tre righe e' nativa 473px: riempie la colonna
+     con un ingrandimento di soli 0.71x */
+  .hero-logo--righe{display:block;width:100%;max-width:360px;margin-bottom:clamp(20px,5vw,30px)}
+}
+/* il titolo riprende la gerarchia del logo storico: riga breve sopra,
+   la frase del whitepaper sotto, più grande */
+/* stessa logica del titolo in apertura, ma alla scala dei titoli di
+   sezione: prima riga in chiaro, seconda nei colori della marca */
+.titolo-due{display:flex;flex-direction:column;gap:.04em;max-width:20ch}
+.titolo-due .t-su{color:var(--bone)}
+
+.hero-titolo{display:flex;flex-direction:column;gap:.04em;max-width:22ch}
+.hero-titolo .t-su{
+  font-size:clamp(23px,3.3vw,37px);color:var(--bone);
+  letter-spacing:.015em;line-height:1.05;
+}
+.hero-titolo .t-giu{
+  font-size:clamp(33px,6vw,66px);letter-spacing:-.012em;line-height:1;
+}
+.hero-body{
+  display:grid;gap:clamp(26px,4vw,56px);grid-template-columns:1fr;
+  margin-top:clamp(26px,3.5vw,38px);
+}
+@media(min-width:880px){.hero-body{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr)}}
+.hero-cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}
+
+/* ─────────── LA SCALA ─────────── */
+.scala-wrap{margin-top:clamp(44px,6vw,72px)}
+/* barre ed etichette sono due griglie identiche: restano allineate
+   e le etichette non possono essere tagliate dalla barra più bassa */
+.scala-bars,.scala-labs{display:grid;grid-template-columns:repeat(8,1fr);gap:6px}
+.scala-bars{align-items:end;height:clamp(150px,20vw,235px)}
+.grad{
+  height:var(--h);border-radius:var(--r-sm) var(--r-sm) 0 0;
+  background:var(--c);
+  background:linear-gradient(180deg,var(--c) 0%,color-mix(in srgb,var(--c) 8%,transparent) 100%);
+  box-shadow:inset 0 3px 0 0 var(--c);
+  transition:transform .25s ease;transform-origin:bottom;
+}
+.grad:hover{transform:scaleY(1.045)}
+.scala-labs{list-style:none;counter-reset:grad}
+.lab{display:flex;justify-content:center;padding-top:14px;height:140px}
+.lab span{
+  writing-mode:vertical-rl;text-orientation:mixed;
+  font-family:var(--mono);font-size:clamp(9.5px,1.05vw,11.5px);
+  letter-spacing:.17em;text-transform:uppercase;color:var(--mute);white-space:nowrap;
+}
+.lab--end span{color:var(--orange);font-weight:500}
+
+/* ─────────── STATISTICHE ─────────── */
+.stats{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:rgba(255,255,255,.03);
+}
+.stat{padding:26px 22px;border-right:1px solid var(--line)}
+.stat:last-child{border-right:none}
+.stat b{
+  display:block;font-family:var(--mono);font-size:clamp(24px,3.2vw,34px);font-weight:500;
+  line-height:1;margin-bottom:9px;font-variant-numeric:tabular-nums;
+  color:var(--yellow);
+  background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+}
+.stat span{font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--mute-2)}
+
+/* ─────────── CHI SONO ─────────── */
+/* La foto è parecchio più alta della colonna di testo: se partono
+   dalla stessa riga, il testo resta appeso in alto e sotto rimane un
+   vuoto lungo mezza foto. Centrandolo, il blocco di testo si appoggia
+   al centro ottico della foto e le due colonne si bilanciano. */
+.about{display:grid;gap:clamp(26px,3.5vw,48px);grid-template-columns:1fr;align-items:center}
+@media(min-width:880px){.about{grid-template-columns:minmax(0,430px) minmax(0,1fr)}}
+/* nessun riquadro: la foto è scontornata, quindi appoggia direttamente
+   sul fondo. Un alone caldo dietro le dà profondità senza incorniciarla. */
+/* La foto è un mezzo busto ritagliato sopra il gomito, così le braccia
+   non vengono tagliate dal bordo. Non serve più spostarla: allineata
+   al margine, sta a piombo sotto il titolo della sezione. */
+.about-img{position:relative}
+/* il ritaglio taglia netto sulle spalle: una dissolvenza in basso
+   la fa sfumare nel fondo invece di sembrare affettata */
+.about-img img{
+  -webkit-mask-image:linear-gradient(to bottom,#000 84%,transparent 100%);
+          mask-image:linear-gradient(to bottom,#000 84%,transparent 100%);
+}
+.about-img::before{
+  content:"";position:absolute;left:50%;top:8%;translate:-50% 0;
+  width:88%;height:84%;border-radius:50%;z-index:0;
+  background:radial-gradient(closest-side,rgba(250,157,7,.16),transparent 70%);
+  pointer-events:none;
+}
+.about-img img{position:relative;z-index:1;width:100%;height:auto}
+/* il testo accanto alla foto è il racconto di chi sei: più grande
+   e più arioso del testo di servizio */
+.about-txt .note{font-size:clamp(17.5px,1.7vw,20.5px);line-height:1.72}
+.about-txt .note + .note{margin-top:.2em}
+.about-txt .pill{font-size:11.5px;padding:7px 15px}
+.pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:28px}
+.pill{
+  font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--mute);border:1px solid var(--line);border-radius:30px;padding:6px 14px;
+  transition:border-color .2s,color .2s;
+}
+.pill:hover{border-color:var(--amber);color:var(--amber)}
+.pill--key{
+  color:#1A0E00;background:var(--grad);border-color:transparent;font-weight:600;
+}
+.pill--key:hover{color:#1A0E00}
+
+/* ─────────── VIDEO E ARTICOLI ───────────
+   Le schede degli articoli usano lo stesso vestito di quelle dei video:
+   stessa griglia, stessa cornice, stessa copertina 16:9. Non è pigrizia,
+   è coerenza — sono due elenchi di contenuti, devono somigliarsi. Al
+   posto del bottone play, sulle schede articolo compare una freccia. */
+.vgrid,.agrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.vcard,.acard{
+  background:rgba(255,255,255,.035);border:1px solid var(--line);border-radius:var(--r);
+  overflow:hidden;text-decoration:none;display:flex;flex-direction:column;
+  transition:border-color .22s,transform .22s ease,box-shadow .3s ease;
+}
+.vcard:hover,.acard:hover{
+  border-color:var(--line-2);transform:translateY(-4px);
+  box-shadow:0 18px 40px -18px rgba(250,157,7,.45);
+}
+.vthumb{position:relative;aspect-ratio:16/9;overflow:hidden;background:#000}
+.vthumb img{width:100%;height:100%;object-fit:cover;transition:transform .4s ease}
+.vcard:hover .vthumb img,.acard:hover .vthumb img{transform:scale(1.06)}
+.vthumb::after{
+  content:"";position:absolute;inset:auto 0 0 0;height:52%;
+  background:linear-gradient(180deg,transparent,rgba(10,8,7,.72));
+}
+.vplay{
+  position:absolute;left:14px;bottom:12px;z-index:2;
+  width:38px;height:38px;border-radius:50%;background:var(--grad);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;transform:translateY(6px);transition:opacity .22s,transform .22s;
+}
+.vcard:hover .vplay,.acard:hover .vplay{opacity:1;transform:none}
+.vplay svg{width:13px;height:13px;fill:#1A0E00;margin-left:2px}
+/* la freccia delle schede articolo: stesso cerchio del play */
+.vplay b{font-family:var(--body);font-size:16px;font-weight:600;color:#1A0E00;line-height:1}
+.vinfo{padding:16px 18px 18px;display:flex;flex-direction:column;gap:10px;flex:1}
+.vtitle{
+  font-size:15.5px;font-weight:600;color:var(--bone);line-height:1.42;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+}
+.vdate{font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;color:var(--mute-2);margin-top:auto}
+.loading{
+  grid-column:1/-1;padding:54px 20px;text-align:center;
+  border:1px dashed var(--line);border-radius:var(--r);
+  font-family:var(--mono);font-size:12.5px;letter-spacing:.06em;color:var(--mute-2);
+}
+.loading a{color:var(--amber);text-decoration:none}
+.loading a:hover{text-decoration:underline}
+.more{margin-top:26px;display:flex;justify-content:flex-end}
+.more a{
+  font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--mute);text-decoration:none;padding-bottom:4px;
+  border-bottom:1px solid var(--line-2);transition:color .18s,border-color .18s;
+}
+.more a:hover{color:var(--amber);border-color:var(--amber)}
+
+/* ─────────── PODCAST ─────────── */
+.pod{display:grid;gap:clamp(28px,4vw,52px);grid-template-columns:1fr;align-items:center}
+@media(min-width:820px){.pod{grid-template-columns:minmax(0,1fr) 250px}}
+.pod-art{
+  position:relative;aspect-ratio:1;border-radius:var(--r);overflow:hidden;
+  border:1px solid var(--line);
+}
+.pod-art img{width:100%;height:100%;object-fit:cover}
+.pod-art::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(150deg,rgba(255,211,0,.14),transparent 55%,rgba(246,103,14,.18));
+}
+.btn--spotify{background:#1DB954;color:#0A0A0A;box-shadow:0 6px 22px -8px rgba(29,185,84,.55)}
+.btn--spotify:hover{transform:translateY(-2px);box-shadow:0 12px 32px -10px rgba(29,185,84,.7)}
+
+/* ─────────── ARTICOLI ─────────── */
+.arts{border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.art{
+  position:relative;display:grid;grid-template-columns:auto 1fr auto;gap:18px;align-items:center;
+  padding:18px 24px;text-decoration:none;border-bottom:1px solid var(--line);
+  transition:background .18s;
+}
+.arts .art:last-child{border-bottom:none}
+.art::before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:var(--grad);opacity:0;transition:opacity .18s;
+}
+.art:hover{background:var(--ink-3)}
+.art:hover::before{opacity:1}
+.art-n{font-family:var(--mono);font-size:11.5px;color:var(--mute-2);font-variant-numeric:tabular-nums}
+.art-t{font-size:16px;font-weight:500;color:var(--bone);line-height:1.45}
+.art-x{font-family:var(--mono);font-size:15px;color:var(--mute-2);transition:color .18s,transform .18s}
+.art:hover .art-x{color:var(--amber);transform:translateX(5px)}
+
+/* ─────────── SUPPORTAMI ─────────── */
+.ln{
+  border:1px solid var(--line-2);border-radius:var(--r);overflow:hidden;
+  background:rgba(0,0,0,.3);position:relative;
+}
+.ln::after{
+  content:"";position:absolute;right:-6%;top:-40%;width:46%;height:150%;
+  background:radial-gradient(closest-side,rgba(250,157,7,.13),transparent 70%);
+  pointer-events:none;
+}
+.ln-in{position:relative;z-index:1;padding:clamp(28px,4vw,46px)}
+.ln h3{margin-bottom:10px}
+.ln-sub{color:var(--mute);font-size:16.5px;max-width:56ch;margin-bottom:26px}
+.ln-addr{
+  display:inline-flex;align-items:center;gap:14px;
+  background:var(--ink-2);border:1px solid var(--line-2);border-radius:var(--r-sm);
+  padding:15px 21px;cursor:pointer;text-align:left;
+  font-family:var(--mono);font-size:clamp(13px,1.5vw,15.5px);color:var(--yellow);
+  transition:border-color .18s,box-shadow .25s;
+}
+.ln-addr:hover{border-color:var(--amber);box-shadow:0 8px 26px -12px rgba(250,157,7,.6)}
+.ln-addr svg{width:15px;height:15px;flex:none;stroke:var(--mute)}
+.ln-hint{
+  font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--mute-2);margin-top:12px;
+}
+/* l'avviso sui link affiliati: deve leggersi senza sforzo, ma non deve
+   competere con le schede. Stesso colore del testo di servizio, con i
+   passaggi che contano in giallo — <em> è l'evidenziazione usata in
+   tutto il resto della pagina, quindi niente eccezioni qui. */
+.affiliati{
+  margin-top:clamp(30px,4vw,42px);
+  font-size:15.5px;line-height:1.7;color:var(--mute-2);max-width:68ch;
+}
+.ref-group{margin-top:clamp(32px,4vw,46px)}
+.ref-lbl{
+  font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--mute-2);border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:16px;
+  display:flex;align-items:center;gap:10px;
+}
+.ref-lbl b{
+  font-weight:500;color:var(--orange);
+  background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+}
+.refs{display:grid;grid-template-columns:repeat(2,1fr);gap:13px}
+/* Tre colonne: sigla · logo · testo. Le posizioni sono scritte a mano
+   (grid-column/grid-row) e non lasciate all'automatico: se il logo non
+   c'e', la scheda deve ricompattarsi senza che il nome scivoli nella
+   colonna sbagliata. Ci pensa la classe .ref--nologo qui sotto, messa
+   dal JavaScript quando l'immagine non si carica. */
+.ref{
+  background:rgba(255,255,255,.035);border:1px solid var(--line);border-radius:var(--r);
+  padding:20px 23px;text-decoration:none;
+  display:grid;grid-template-columns:auto auto 1fr;gap:4px 18px;align-items:center;
+  transition:border-color .22s,transform .22s ease,box-shadow .3s ease;
+}
+.ref:hover{
+  border-color:var(--line-2);transform:translateY(-3px);
+  box-shadow:0 16px 34px -18px rgba(250,157,7,.5);
+}
+.ref-code{
+  grid-row:1/3;grid-column:1;
+  font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--mute-2);
+  border-right:1px solid var(--line);padding-right:18px;align-self:stretch;
+  display:flex;align-items:center;
+}
+/* il riquadro del logo: quadrato fisso, così schede con loghi di forme
+   diverse restano tutte allineate. L'immagine sta DENTRO al riquadro
+   (contain), non lo riempie: un logo largo non viene tagliato. */
+.ref-logo{
+  grid-row:1/3;grid-column:2;
+  width:48px;height:48px;flex:none;border-radius:10px;overflow:hidden;
+  background:rgba(255,255,255,.06);border:1px solid var(--line);
+  display:flex;align-items:center;justify-content:center;
+}
+.ref-logo img{width:100%;height:100%;object-fit:contain;padding:5px}
+.ref-name{grid-column:3;grid-row:1;font-family:var(--display);font-size:16px;font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.ref-badge{
+  grid-column:3;grid-row:2;
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--yellow);
+  background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+}
+/* scheda senza logo: si torna alle due colonne di prima */
+.ref--nologo{grid-template-columns:auto 1fr}
+.ref--nologo .ref-name,.ref--nologo .ref-badge{grid-column:2}
+
+/* ─────────── CONSULENZE ─────────── */
+/* Il modulo sta dentro allo stesso riquadro scuro del Lightning Address:
+   sono le due cose che chiedono un'azione, quindi si somigliano. */
+.form{margin-top:clamp(26px,3.5vw,36px);max-width:620px}
+.field{display:block;margin-bottom:18px}
+.field-lbl{
+  display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--mute-2);margin-bottom:8px;
+}
+.field-lbl i{font-style:normal;color:var(--orange)}
+.field input,.field select,.field textarea{
+  width:100%;font-family:var(--body);font-size:16.5px;color:var(--bone);
+  background:var(--ink-2);border:1px solid var(--line-2);border-radius:var(--r-sm);
+  padding:13px 15px;transition:border-color .18s,box-shadow .25s;
+}
+.field textarea{min-height:132px;resize:vertical;line-height:1.6}
+/* la freccina del menu a tendina disegnata a mano: quella di sistema
+   sarebbe chiara e stonerebbe sul fondo scuro */
+.field select{
+  appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:42px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5l5-5' fill='none' stroke='%23A8A093' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 16px center;background-size:12px;
+}
+.field select option{background:var(--ink-2);color:var(--bone)}
+.field input::placeholder,.field textarea::placeholder{color:var(--mute-2);opacity:.7}
+.field input:focus,.field select:focus,.field textarea:focus{
+  outline:none;border-color:var(--amber);box-shadow:0 0 0 3px rgba(250,157,7,.14);
+}
+.form-foot{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-top:6px}
+.form button{border:0;font-family:var(--display)}
+.privacy{
+  font-family:var(--mono);font-size:11.5px;line-height:1.7;letter-spacing:.04em;
+  color:var(--mute-2);max-width:44ch;
+}
+/* il campo trappola per i robot: invisibile a chi legge, ma i programmi
+   che riempiono i moduli in automatico lo compilano e si smascherano */
+.esca{position:absolute;left:-9999px;opacity:0;height:0;overflow:hidden}
+
+/* ─────────── CONTATTI ─────────── */
+.contacts{display:grid;grid-template-columns:repeat(2,1fr);gap:13px;max-width:680px}
+/* la mail sta da sola, in una scheda sua: è il canale diretto */
+.contacts--solo{grid-template-columns:1fr;max-width:420px}
+/* i social vanno a blocchi: si infilano in due o tre colonne
+   a seconda dello spazio, senza lasciare buchi */
+/* i 230px di larghezza minima non sono a caso: sotto quella misura
+   "@final_step_bitcoin" va a capo dentro la scheda e si legge male */
+.socials{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:13px;max-width:820px}
+.social-intro{
+  margin-top:clamp(30px,4vw,42px);margin-bottom:16px;
+  font-size:16.5px;color:var(--mute);
+}
+.contact{
+  background:rgba(255,255,255,.035);border:1px solid var(--line);border-radius:var(--r);
+  padding:19px 21px;display:flex;align-items:center;gap:16px;text-decoration:none;
+  transition:border-color .22s,transform .22s ease,box-shadow .3s ease;
+}
+.contact:hover{
+  border-color:var(--line-2);transform:translateY(-3px);
+  box-shadow:0 16px 34px -18px rgba(250,157,7,.5);
+}
+.c-ic{
+  width:44px;height:44px;border-radius:11px;flex:none;
+  background:var(--grad-soft);border:1px solid var(--line);
+  display:flex;align-items:center;justify-content:center;
+}
+.c-txt{display:block;min-width:0}
+.c-lbl{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--mute-2);margin-bottom:3px}
+.c-val{display:block;font-size:15px;font-weight:600;color:var(--bone);word-break:break-word}
+.contact:hover .c-val{color:var(--amber)}
+
+/* ─────────── FOOTER ─────────── */
+footer{border-top:1px solid var(--line);background:rgba(0,0,0,.28)}
+.foot{
+  padding-block:34px;display:flex;align-items:center;justify-content:space-between;
+  gap:18px;flex-wrap:wrap;
+}
+.foot-note{font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--mute-2)}
+.foot-note a{color:var(--mute);text-decoration:none}
+.foot-note a:hover{color:var(--amber)}
+
+/* ─────────── COMPARSA IN SCORRIMENTO ─────────── */
+.rise{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.3,1)}
+.rise.in{opacity:1;transform:none}
+
+/* ─────────── RESPONSIVE ─────────── */
+/* alle larghezze intermedie stringo un filo le voci di menu: dà margine
+   nel caso i caratteri non carichino e il browser usi quelli di riserva,
+   che sono più larghi e farebbero collidere il menu col marchio */
+@media(max-width:1250px){
+  .nav-links a{padding-inline:9px;letter-spacing:.1em}
+}
+/* Fascia intermedia. Con la scritta grande e otto voci di menu (dopo
+   l'aggiunta di "Consulenze") la barra ha bisogno di circa 1150px:
+   sotto questa soglia passo al menu a panino, altrimenti le ultime
+   voci escono fuori dalla barra. */
+@media(max-width:1150px){
+  .burger{display:block}
+  .nav-links{
+    display:none;position:fixed;top:calc(var(--nav-h) + 10px);left:0;right:0;
+    background:var(--ink);border-bottom:1px solid var(--line);
+    flex-direction:column;align-items:stretch;gap:0;padding:10px;
+  }
+  .nav-links.open{display:flex}
+  .nav-links a{padding:14px 18px;font-size:13px}
+  .nav-links a.on{background:var(--ink-3)}
+  .nav-links a.on::after{left:18px;right:auto;width:22px;bottom:9px}
+  .vgrid,.agrid{grid-template-columns:repeat(2,1fr)}
+  .pod-art{display:none}
+}
+/* Telefono. */
+@media(max-width:760px){
+  nav{padding-inline:20px}
+  .brand .scritta{height:30px}
+  .brand{gap:10px}
+  .vgrid,.agrid{grid-template-columns:1fr}
+  .refs,.contacts,.socials{grid-template-columns:1fr}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .stat{border-bottom:1px solid var(--line)}
+  .stat:nth-child(2n){border-right:none}
+  .stat:nth-last-child(-n+2){border-bottom:none}
+  .art{grid-template-columns:auto 1fr;gap:14px}
+  .art-x{display:none}
+  /* la scala diventa un elenco leggibile */
+  .scala-bars{display:none}
+  .scala-labs{grid-template-columns:1fr;gap:4px}
+  .lab{
+    height:auto;justify-content:flex-start;align-items:center;padding:13px 17px;
+    background:var(--ink-2);border-radius:var(--r-sm);counter-increment:grad;
+    border-left:3px solid var(--c);
+  }
+  .lab span{writing-mode:horizontal-tb;letter-spacing:.14em}
+  .lab::before{
+    content:counter(grad,decimal-leading-zero);font-family:var(--mono);font-size:10.5px;
+    color:var(--mute-2);margin-right:15px;font-variant-numeric:tabular-nums;
+  }
+  .lab--end{background:var(--grad)}
+  .lab--end span,.lab--end::before{color:#1A0E00}
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{transition:none!important;animation:none!important}
+  .rise{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+
+<!-- gli strati dello sfondo: stanno dietro a tutto e non sono cliccabili -->
+<div class="sfondo" aria-hidden="true">
+  <span class="fulmini"></span>
+  <span class="aurora aurora--1"></span>
+  <span class="aurora aurora--2"></span>
+  <span class="grana"></span>
+</div>
+
+<!-- ══════════ NAV ══════════ -->
+<div class="nav-shell">
+  <nav>
+    <a href="#home" class="brand">
+      <img class="marchio" src="img/logo.webp" width="34" height="34" alt="">
+      <img class="scritta" src="img/scritta.webp?v=3" width="1219" height="275" alt="Final Step Bitcoin">
+    </a>
+    <div class="nav-links" id="navlinks">
+      <a href="#home" class="on">Home</a>
+      <a href="#chi-sono">Chi sono</a>
+      <a href="#video">Video</a>
+      <a href="#podcast">Podcast</a>
+      <a href="#articoli">Articoli</a>
+      <a href="#supportami">Supportami</a>
+      <a href="#consulenze">Consulenze</a>
+      <a href="#contatti">Contatti</a>
+    </div>
+    <button class="burger" id="burger" aria-label="Apri il menu" aria-expanded="false" aria-controls="navlinks">&#9776;</button>
+  </nav>
+  <div class="hazard" aria-hidden="true"></div>
+</div>
+
+<!-- ══════════ HOME ══════════ -->
+<div id="home">
+  <header class="hero wrap">
+    <!-- Il logo del canale in grande: e' la prima cosa che si vede, e
+         richiama subito YouTube. Su schermo stretto passa alla versione
+         con una parola per riga, cosi le lettere restano grandi. -->
+    <img class="hero-logo hero-logo--riga" src="img/scritta.webp?v=3"
+         width="1219" height="275" alt="Final Step Bitcoin" fetchpriority="high" decoding="async">
+    <img class="hero-logo hero-logo--righe" src="img/scritta-righe.webp?v=2"
+         width="473" height="484" alt="Final Step Bitcoin" decoding="async">
+    <!-- Il nome del canale sta già nella barra in alto, nel lettering
+         originale. Qui riprendo il sottotitolo storico del logo: non
+         ripete la parola "Bitcoin" e cita il titolo del whitepaper,
+         "Bitcoin: A Peer-to-Peer Electronic Cash System". -->
+    <h1 class="hero-titolo">
+      <span class="t-su">Dal baratto al</span>
+      <span class="t-giu grad-text">P2P Electronic Cash System</span>
+    </h1>
+
+    <div class="hero-body">
+      <p class="lede">
+        Passando per i <em>metalli preziosi</em>, il <em>gold standard</em>,
+        l'<em>ordine esecutivo 6102</em>, Nixon e i <em>cypherpunk</em>, fino al
+        <em>whitepaper di Satoshi Nakamoto</em>. Parlo di blockchain, <em>Lightning Network</em>,
+        wallet, attualità e <em>Nostr</em>. Troverai tantissimi tutorial pratici sui principali
+        <em>portafogli Bitcoin</em>, testati sul campo.
+      </p>
+      <div>
+        <p class="note">
+          Ogni video è gratuito. Lo scopo è quello di capire davvero come funziona
+          il protocollo Bitcoin e come usarlo in autonomia, senza intermediari.
+        </p>
+        <div class="hero-cta">
+          <a href="https://www.youtube.com/@final_step_bitcoin" target="_blank" rel="noopener" class="btn btn--fill">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1C24 15.9 24 12 24 12s0-3.9-.5-5.8zM9.8 15.5V8.5l6.3 3.5-6.3 3.5z"/></svg>
+            Iscriviti
+          </a>
+          <a href="#chi-sono" class="btn btn--line">Chi sono</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="scala-wrap rise">
+      <div class="scala-bars" aria-hidden="true">
+        <div class="grad" style="--h:20%;--c:#FFD300"></div>
+        <div class="grad" style="--h:28%;--c:#FEC402"></div>
+        <div class="grad" style="--h:37%;--c:#FCB404"></div>
+        <div class="grad" style="--h:47%;--c:#FBA506"></div>
+        <div class="grad" style="--h:57%;--c:#FA9508"></div>
+        <div class="grad" style="--h:69%;--c:#F9860A"></div>
+        <div class="grad" style="--h:83%;--c:#F7760C"></div>
+        <div class="grad" style="--h:100%;--c:#F6670E"></div>
+      </div>
+      <ol class="scala-labs">
+        <li class="lab" style="--c:#FFD300"><span>Baratto</span></li>
+        <li class="lab" style="--c:#FEC402"><span>Metalli</span></li>
+        <li class="lab" style="--c:#FCB404"><span>Gold standard</span></li>
+        <li class="lab" style="--c:#FBA506"><span>Ordine 6102</span></li>
+        <li class="lab" style="--c:#FA9508"><span>Bretton Woods</span></li>
+        <li class="lab" style="--c:#F9860A"><span>Nixon 1971</span></li>
+        <li class="lab" style="--c:#F7760C"><span>Cypherpunk</span></li>
+        <li class="lab lab--end" style="--c:#F6670E"><span>Bitcoin</span></li>
+      </ol>
+    </div>
+  </header>
+
+</div>
+
+<!-- ══════════ 01 · CHI SONO ══════════ -->
+<section class="sec sec--alt" id="chi-sono">
+  <div class="wrap">
+    <div class="sec-head rise">
+      <h2 class="titolo-due">
+        <span class="t-su">Sono PLAK</span>
+        <span class="t-giu grad-text">e racconto Bitcoin su YouTube</span>
+      </h2>
+    </div>
+    <div class="about rise">
+      <div class="about-img">
+        <!-- il "?v=3" serve a forzare il browser a riscaricare la foto:
+             senza, continuerebbe a mostrare quella vecchia dalla cache.
+             Se la cambi di nuovo, alza il numero -->
+        <img src="img/plak.webp?v=7" width="880" height="1054" alt="PLAK, autore di Final Step Bitcoin" loading="lazy" decoding="async">
+      </div>
+      <div class="about-txt">
+        <p class="note">
+          Sul canale trovi <em>tutorial sui principali portafogli Bitcoin</em>, ma non solo:
+          c'è la <em>storia di Bitcoin</em> e tutti gli sviluppi <em>passati, presenti e futuri</em>
+          di questo protocollo.
+        </p>
+        <p class="note">
+          Dal baratto alla <em>Lightning Network</em>, dal gold standard ai <em>cypherpunk</em>:
+          ogni episodio è un passo nel viaggio verso la <em>libertà finanziaria attraverso Bitcoin</em>.
+          Niente altcoin, niente scorciatoie, niente consigli finanziari.
+        </p>
+        <div class="pills">
+          <span class="pill pill--key">Bitcoin only</span>
+          <span class="pill">Tutorial</span>
+          <span class="pill">Lightning Network</span>
+          <span class="pill">Storia di Bitcoin</span>
+          <span class="pill">Wallet</span>
+          <span class="pill">Nostr</span>
+          <span class="pill">Rassegna stampa</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- i numeri stanno qui, non in apertura: sono dati su di me,
+         quindi appartengono a "Chi sono" -->
+    <div class="stats rise" style="margin-top:clamp(40px,5vw,64px)">
+      <div class="stat"><b data-target="120">0</b><span>Video pubblicati</span></div>
+      <div class="stat"><b data-target="3000">0</b><span>Iscritti YouTube</span></div>
+      <div class="stat"><b data-target="4">0</b><span>Anni di contenuti</span></div>
+      <div class="stat"><b>1</b><span>Bitcoin. Solo Bitcoin.</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ 02 · VIDEO ══════════ -->
+<section class="sec" id="video">
+  <div class="wrap">
+    <div class="sec-head rise">
+      <h2>Video recenti</h2>
+    </div>
+    <div class="vgrid rise" id="vgrid">
+      <div class="loading">Caricamento video…</div>
+    </div>
+    <div class="more">
+      <a href="https://www.youtube.com/@final_step_bitcoin" target="_blank" rel="noopener">Tutti i video ↗</a>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ══════════ 03 · PODCAST ══════════ -->
+<section class="sec sec--alt" id="podcast">
+  <div class="wrap">
+    <div class="sec-head rise">
+      <h2>Podcast</h2>
+    </div>
+    <div class="pod rise">
+      <div>
+        <p class="lede" style="margin-bottom:28px">
+          Se non vuoi vedermi, puoi anche solo ascoltarmi <em>quando vuoi e dove vuoi</em>.
+          Approfondimenti, analisi e rassegne stampa anche sul tuo podcast player preferito.
+        </p>
+        <a href="https://open.spotify.com/search/Final%20Step%20Bitcoin" target="_blank" rel="noopener" class="btn btn--spotify">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.52 17.34c-.24.36-.66.48-1.02.24-2.82-1.74-6.36-2.1-10.56-1.14-.42.12-.78-.18-.9-.54-.12-.42.18-.78.54-.9 4.56-1.02 8.52-.6 11.64 1.32.42.18.48.66.3 1.02zm1.44-3.3c-.3.42-.84.6-1.26.3-3.24-1.98-8.16-2.58-11.94-1.38-.48.12-1.02-.12-1.14-.6-.12-.48.12-1.02.6-1.14 4.38-1.32 9.78-.66 13.5 1.62.36.18.54.78.24 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.3c-.6.18-1.2-.18-1.38-.72-.18-.6.18-1.2.72-1.38C8.64 5.9 15.72 6.18 20.1 8.76c.54.3.72 1.02.42 1.56-.3.42-1.02.6-1.44.36z"/></svg>
+          Ascolta su Spotify
+        </a>
+      </div>
+      <div class="pod-art">
+        <img src="img/logo.webp" width="512" height="512" alt="" loading="lazy" decoding="async">
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ══════════ 04 · ARTICOLI ══════════ -->
+<section class="sec" id="articoli">
+  <div class="wrap">
+    <div class="sec-head rise">
+      <h2>Articoli</h2>
+    </div>
+    <div id="artbox" class="rise">
+      <div class="loading">Caricamento articoli…</div>
+    </div>
+    <div class="more">
+      <a href="https://news.21milioni.com/npub17ugguepv89nvdrd72j7j25ymuts6w3d3lnsg6f0xgm2ah8zskhqq3v5ulj.html" target="_blank" rel="noopener">Tutti gli articoli ↗</a>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ══════════ 05 · SUPPORTAMI ══════════ -->
+<section class="sec sec--alt" id="supportami">
+  <div class="wrap">
+    <div class="sec-head rise">
+      <h2>Supportami</h2>
+    </div>
+
+    <div class="ln rise">
+      <div class="hazard" aria-hidden="true"></div>
+      <div class="ln-in">
+        <h3>Lightning Address</h3>
+        <p class="ln-sub">
+          Nessuna banca, nessun intermediario. Supportami direttamente in Bitcoin
+          via Lightning Network. Istantaneo, senza confini.
+        </p>
+        <button class="ln-addr" id="lnbtn" type="button">
+          <span id="lntext">plakbtc@satsmobi.com</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        </button>
+        <p class="ln-hint" id="lnhint" role="status">Clicca per copiare</p>
+      </div>
+    </div>
+
+    <!-- TRASPARENZA SUI LINK AFFILIATI.
+         Sta PRIMA delle schede, non dopo: la legge chiede che la natura
+         commerciale si veda subito, senza che il visitatore debba fare
+         qualcosa (scorrere, cliccare, aprire un menu). Se un domani
+         sposti i blocchi, questa riga deve restare sopra a tutti. -->
+    <p class="affiliati rise">
+      Quelli qui sotto sono <em>link affiliati</em>: se acquisti o ti registri
+      passando da qui, io ricevo una commissione. Per te il prezzo non cambia e in
+      molti casi hai anche uno sconto: <em>usando questi link sosterrai il canale
+      a costo zero</em>.
+    </p>
+
+    <!-- I LOGHI. Ogni scheda cerca il proprio file dentro img/sponsor/.
+         Se il file non c'è ancora, il JavaScript in fondo alla pagina
+         toglie il riquadro e la scheda torna com'era: non resta mai un
+         quadrato vuoto o l'icona di immagine rotta. Per aggiungerne uno
+         basta salvare il file col nome esatto scritto qui sotto. -->
+    <div class="ref-group rise">
+      <p class="ref-lbl"><b>SP</b> Sponsor</p>
+      <div class="refs">
+        <a href="https://bitbox.swiss/finalstepbitcoin" target="_blank" rel="noopener" class="ref">
+          <span class="ref-code">SP·01</span>
+          <span class="ref-logo"><img src="img/sponsor/bitbox.png" alt="" decoding="async"></span>
+          <span class="ref-name">BitBox</span>
+          <span class="ref-badge">5% di sconto</span>
+        </a>
+        <a href="https://bitcashback.net/l/finalstepbitcoin" target="_blank" rel="noopener" class="ref">
+          <span class="ref-code">SP·02</span>
+          <span class="ref-logo"><img src="img/sponsor/bitcashback.png" alt="" decoding="async"></span>
+          <span class="ref-name">BitCashback</span>
+          <span class="ref-badge">Bonus raddoppiato per 1 mese</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="ref-group rise">
+      <p class="ref-lbl"><b>EV</b> Eventi</p>
+      <div class="refs">
+        <a href="https://bitcareforum.it/#biglietti" target="_blank" rel="noopener" class="ref">
+          <span class="ref-code">EV·01</span>
+          <span class="ref-logo"><img src="img/sponsor/bitcare-forum.png" alt="" decoding="async"></span>
+          <span class="ref-name">BitCare Forum</span>
+          <span class="ref-badge">10% di sconto</span>
+        </a>
+        <a href="https://btcprg.me/PLAK" target="_blank" rel="noopener" class="ref">
+          <span class="ref-code">EV·02</span>
+          <span class="ref-logo"><img src="img/sponsor/btc-prague.png" alt="" decoding="async"></span>
+          <span class="ref-name">BTC Prague</span>
+          <span class="ref-badge">10% di sconto</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="ref-group rise">
+      <p class="ref-lbl"><b>PL</b> Piattaforme di acquisto</p>
+      <div class="refs">
+        <a href="https://hodlhodl.com/join/JJNE" target="_blank" rel="noopener" class="ref">
+          <span class="ref-code">PL·01</span>
+          <span class="ref-logo"><img src="img/sponsor/hodl-hodl.png" alt="" decoding="async"></span>
+          <span class="ref-name">Hodl Hodl</span>
+          <span class="ref-badge">Sconto a vita</span>
+        </a>
+        <a href="https://app.bullbitcoin.com/registration/plak" target="_blank" rel="noopener" class="ref">
+          <span class="ref-code">PL·02</span>
+          <span class="ref-logo"><img src="img/sponsor/bull-bitcoin.png" alt="" decoding="async"></span>
+          <span class="ref-name">Bull Bitcoin</span>
+          <span class="ref-badge">Sconto sulle commissioni</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ══════════ 06 · CONSULENZE ══════════ -->
+<section class="sec" id="consulenze">
+  <div class="wrap">
+    <div class="sec-head rise">
+      <h2>Consulenze</h2>
+    </div>
+    <!-- la spiegazione sta fuori dal riquadro: prima si legge di cosa si
+         tratta, poi si entra nel riquadro e si compila. Dentro al box
+         resta solo l'azione. -->
+    <p class="lede rise" style="margin-bottom:clamp(28px,3.5vw,40px)">
+      Hai bisogno di un aiuto mirato? Scrivimi e fisseremo insieme un appuntamento
+      per una call. Compila il form qui sotto e verrai ricontattato via mail
+      nel minor tempo possibile.
+    </p>
+
+    <div class="ln rise">
+      <div class="hazard" aria-hidden="true"></div>
+      <div class="ln-in">
+        <h3>Prenota una call</h3>
+
+        <!-- IL MODULO.
+             Un sito fatto di sole pagine non sa spedire email da solo: serve
+             qualcuno che riceva il modulo e te lo giri in casella. Qui lo fa
+             FormSubmit, che non chiede registrazione.
+             ATTENZIONE, DA FARE UNA VOLTA SOLA: la prima volta che qualcuno
+             invia il modulo, FormSubmit ti manda una mail a
+             info@finalstepbitcoin.com con un link di conferma. Finché non lo
+             clicchi, i messaggi non arrivano. Prova tu stesso a inviarne uno
+             appena il sito è online.
+             Se ti arriva spam, cambia _captcha da "false" a "true": chi invia
+             dovrà superare un controllo antirobot. -->
+        <form class="form" action="https://formsubmit.co/info@finalstepbitcoin.com" method="POST">
+          <input type="hidden" name="_subject" value="Richiesta di consulenza dal sito">
+          <input type="hidden" name="_template" value="table">
+          <input type="hidden" name="_captcha" value="false">
+          <!-- campo trappola per i robot: chi legge non lo vede -->
+          <input type="text" name="_honey" class="esca" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+          <label class="field">
+            <span class="field-lbl">La tua email <i>*</i></span>
+            <input type="email" name="email" required placeholder="nome@esempio.com" autocomplete="email">
+          </label>
+
+          <label class="field">
+            <span class="field-lbl">Motivo della consulenza <i>*</i></span>
+            <select name="Motivo della consulenza" required>
+              <option value="">Scegli un argomento…</option>
+              <option>Primi passi con Bitcoin</option>
+              <option>Wallet, backup e sicurezza</option>
+              <option>Hardware wallet</option>
+              <option>Lightning Network</option>
+              <option>Nodo Bitcoin</option>
+              <option>Nostr</option>
+              <option>Collaborazioni e sponsorizzazioni</option>
+              <option>Altro</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span class="field-lbl">Messaggio <i>*</i></span>
+            <textarea name="Messaggio" required placeholder="Raccontami in due righe di cosa hai bisogno e quando preferiresti fare la call."></textarea>
+          </label>
+
+          <div class="form-foot">
+            <button type="submit" class="btn btn--fill">Invia la richiesta</button>
+            <p class="privacy">
+              Il modulo viaggia su FormSubmit e finisce solo nella mia casella.
+              Nessuna newsletter, nessun dato ceduto a terzi.
+            </p>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ══════════ 07 · CONTATTI ══════════ -->
+<section class="sec" id="contatti">
+  <div class="wrap">
+    <div class="sec-head rise">
+      <h2>Contatti</h2>
+    </div>
+    <p class="lede" style="margin-bottom:36px">
+      Disponibile per collaborazioni, interviste e partnership. Scrivimi direttamente.
+    </p>
+    <div class="contacts contacts--solo rise">
+      <a href="mailto:info@finalstepbitcoin.com" class="contact">
+        <span class="c-ic">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FA9D07" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+        </span>
+        <span class="c-txt"><span class="c-lbl">Email</span><span class="c-val">info@finalstepbitcoin.com</span></span>
+      </a>
+    </div>
+
+    <p class="social-intro rise">Seguimi sui principali canali social.</p>
+    <div class="socials rise">
+      <a href="https://www.youtube.com/@final_step_bitcoin" target="_blank" rel="noopener" class="contact">
+        <span class="c-ic">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="#FA9D07" aria-hidden="true"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1C24 15.9 24 12 24 12s0-3.9-.5-5.8zM9.8 15.5V8.5l6.3 3.5-6.3 3.5z"/></svg>
+        </span>
+        <span class="c-txt"><span class="c-lbl">YouTube</span><span class="c-val">@final_step_bitcoin</span></span>
+      </a>
+      <a href="https://www.tiktok.com/@finalstepbitcoin" target="_blank" rel="noopener" class="contact">
+        <span class="c-ic">
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="#FA9D07" aria-hidden="true"><path d="M16.6 5.82A4.28 4.28 0 0 1 15.54 3h-3.09v12.4a2.59 2.59 0 0 1-2.59 2.5 2.59 2.59 0 0 1 0-5.18c.27 0 .52.04.76.12v-3.2a5.86 5.86 0 0 0-.76-.05 5.75 5.75 0 1 0 5.75 5.75V9.01a7.35 7.35 0 0 0 4.3 1.38V7.3a4.28 4.28 0 0 1-3.31-1.48z"/></svg>
+        </span>
+        <span class="c-txt"><span class="c-lbl">TikTok</span><span class="c-val">@finalstepbitcoin</span></span>
+      </a>
+      <a href="https://x.com/Plak_btc" target="_blank" rel="noopener" class="contact">
+        <span class="c-ic">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="#FA9D07" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.259 5.629L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </span>
+        <span class="c-txt"><span class="c-lbl">X / Twitter</span><span class="c-val">@Plak_btc</span></span>
+      </a>
+      <a href="https://www.instagram.com/finalstepbitcoin" target="_blank" rel="noopener" class="contact">
+        <span class="c-ic">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FA9D07" stroke-width="1.8" aria-hidden="true"><rect x="2.5" y="2.5" width="19" height="19" rx="5"/><circle cx="12" cy="12" r="4.5"/><circle cx="17.6" cy="6.4" r="1.2" fill="#FA9D07" stroke="none"/></svg>
+        </span>
+        <span class="c-txt"><span class="c-lbl">Instagram</span><span class="c-val">@finalstepbitcoin</span></span>
+      </a>
+      <a href="https://primal.net/p/nprofile1qqs0wyywvskrjekx3kl9f0f92zd79cd8gkclecydyhnyd4wmn3gttsqmry3ye" target="_blank" rel="noopener" class="contact">
+        <span class="c-ic">
+          <svg width="28" height="28" viewBox="0 0 80 80" fill="none" aria-hidden="true">
+            <ellipse cx="40" cy="54" rx="20" ry="16" fill="#FA9D07"/>
+            <rect x="35" y="22" width="10" height="32" rx="5" fill="#FA9D07"/>
+            <ellipse cx="40" cy="19" rx="9" ry="8" fill="#FA9D07"/>
+            <ellipse cx="44" cy="16" rx="2.5" ry="2" fill="#131110"/>
+            <path d="M37 28 L26 44" stroke="#FA9D07" stroke-width="6" stroke-linecap="round" opacity=".75"/>
+            <path d="M43 28 L54 44" stroke="#FA9D07" stroke-width="6" stroke-linecap="round" opacity=".75"/>
+            <line x1="26" y1="66" x2="22" y2="78" stroke="#FA9D07" stroke-width="5" stroke-linecap="round"/>
+            <line x1="35" y1="69" x2="32" y2="78" stroke="#FA9D07" stroke-width="5" stroke-linecap="round"/>
+            <line x1="45" y1="69" x2="48" y2="78" stroke="#FA9D07" stroke-width="5" stroke-linecap="round"/>
+            <line x1="54" y1="66" x2="58" y2="78" stroke="#FA9D07" stroke-width="5" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <span class="c-txt"><span class="c-lbl">Nostr</span><span class="c-val">Plak@nostr.red</span></span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ FOOTER ══════════ -->
+<footer>
+  <div class="hazard" aria-hidden="true"></div>
+  <div class="wrap foot">
+    <a href="#home" class="brand">
+      <img class="marchio" src="img/logo.webp" width="34" height="34" alt="" loading="lazy">
+      <img class="scritta" src="img/scritta.webp?v=3" width="1219" height="275" alt="Final Step Bitcoin" loading="lazy">
+    </a>
+    <p class="foot-note">
+      © <span id="year">2026</span> Final Step Bitcoin · <a href="mailto:info@finalstepbitcoin.com">info@finalstepbitcoin.com</a>
+      · Nessun contenuto è consulenza finanziaria
+    </p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  'use strict';
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ── Menu mobile ── */
+  var burger = document.getElementById('burger');
+  var links  = document.getElementById('navlinks');
+  burger.addEventListener('click', function(){
+    var open = links.classList.toggle('open');
+    burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  Array.prototype.forEach.call(links.querySelectorAll('a'), function(a){
+    a.addEventListener('click', function(){
+      links.classList.remove('open');
+      burger.setAttribute('aria-expanded','false');
+    });
+  });
+
+  /* ── Voce di menu attiva: vince sempre la sezione più in alto ── */
+  var navA = links.querySelectorAll('a');
+  var ids = ['home','chi-sono','video','podcast','articoli','supportami','consulenze','contatti'];
+  if ('IntersectionObserver' in window) {
+    var visible = {};
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ visible[e.target.id] = e.isIntersecting; });
+      var current = null;
+      for (var i = 0; i < ids.length; i++) {
+        if (visible[ids[i]]) { current = ids[i]; break; }
+      }
+      if (!current) return;
+      Array.prototype.forEach.call(navA, function(a){ a.classList.remove('on'); });
+      var t = links.querySelector('a[href="#' + current + '"]');
+      if (t) t.classList.add('on');
+    }, {threshold:0.15, rootMargin:'-74px 0px -45% 0px'});
+    ids.forEach(function(id){
+      var el = document.getElementById(id);
+      if (el) io.observe(el);
+    });
+  }
+
+  /* ── Comparsa in scorrimento ── */
+  var risers = document.querySelectorAll('.rise');
+  if (reduce || !('IntersectionObserver' in window)) {
+    Array.prototype.forEach.call(risers, function(el){ el.classList.add('in'); });
+  } else {
+    var ro = new IntersectionObserver(function(en){
+      en.forEach(function(e){
+        if (!e.isIntersecting) return;
+        e.target.classList.add('in');
+        ro.unobserve(e.target);
+      });
+    }, {threshold:0.1, rootMargin:'0px 0px -6% 0px'});
+    Array.prototype.forEach.call(risers, function(el){ ro.observe(el); });
+  }
+
+  /* ── Contatori ── */
+  function count(el, target){
+    if (reduce) { el.textContent = target.toLocaleString('it-IT') + '+'; return; }
+    var t0 = performance.now(), dur = 1500;
+    function tick(now){
+      var p = Math.min((now - t0) / dur, 1);
+      var v = Math.round((1 - Math.pow(1 - p, 3)) * target);
+      el.textContent = v.toLocaleString('it-IT') + '+';
+      if (p < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+  var stats = document.querySelector('.stats');
+  if (stats && 'IntersectionObserver' in window) {
+    var so = new IntersectionObserver(function(en){
+      en.forEach(function(e){
+        if (!e.isIntersecting) return;
+        Array.prototype.forEach.call(e.target.querySelectorAll('[data-target]'), function(el){
+          count(el, parseInt(el.dataset.target, 10));
+          delete el.dataset.target;
+        });
+        so.unobserve(e.target);
+      });
+    }, {threshold:0.5});
+    so.observe(stats);
+  }
+
+  /* ── Copia il Lightning Address ── */
+  var LN = 'plakbtc@satsmobi.com';
+  var lnBtn = document.getElementById('lnbtn');
+  var lnHint = document.getElementById('lnhint');
+  lnBtn.addEventListener('click', function(){
+    function select(){
+      var el = document.getElementById('lntext');
+      var r = document.createRange();
+      r.selectNodeContents(el);
+      var s = window.getSelection();
+      s.removeAllRanges(); s.addRange(r);
+      lnHint.textContent = 'Selezionato — premi ⌘C per copiare';
+    }
+    function ok(){
+      lnHint.textContent = '✓ Copiato negli appunti';
+      lnHint.style.color = 'var(--yellow)';
+      setTimeout(function(){
+        lnHint.textContent = 'Clicca per copiare';
+        lnHint.style.color = '';
+      }, 2500);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(LN).then(ok).catch(select);
+    } else { select(); }
+  });
+
+  /* ── Loghi degli sponsor: se il file non c'è, la scheda si ricompatta ──
+     Serve perché i loghi sono file che aggiungi a mano dentro img/sponsor/:
+     finché non ci sono, il browser mostrerebbe l'icona di immagine rotta.
+     Controllo sia le immagini che falliscono adesso, sia quelle che hanno
+     già fallito prima che partisse questo script. */
+  function niente(logo){
+    if (!logo || !logo.parentNode) return;   /* già tolto: non fare nulla */
+    var card = logo.parentNode;
+    card.removeChild(logo);
+    card.classList.add('ref--nologo');
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('.ref-logo img'), function(img){
+    img.addEventListener('error', function(){ niente(img.parentNode); });
+    if (img.complete && img.naturalWidth === 0) niente(img.parentNode);
+  });
+
+  /* ── Anno nel footer ── */
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  /* ── Utilità ── */
+  function esc(s){
+    return String(s).replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+  /* ── I PONTI VERSO YOUTUBE E NOSTR ──
+     Il browser non può leggere le pagine di un altro sito, A MENO CHE
+     quel sito non dia il permesso con l'intestazione
+     "access-control-allow-origin". Chi lo dà si legge DIRETTAMENTE,
+     senza intermediari: è il caso di news.21milioni.com, che sta su
+     GitHub Pages e quel permesso lo manda a tutti (verificato il 27
+     luglio 2026). YouTube invece non lo dà, quindi per i video il
+     ponte serve per forza.
+     Da qui la regola: prima si prova la strada diretta dove è
+     possibile, e solo se fallisce si passa ai ponti. Meno intermediari
+     significa più veloce, meno cose che si rompono e nessun indirizzo
+     IP dei visitatori regalato a servizi di terzi.
+     I ponti restano come rete di sicurezza. Prima ce n'era uno solo,
+     allorigins, e quando era giù la sezione Articoli restava vuota —
+     non per colpa nostra, ma il visitatore non lo sa.
+     (Il 27 luglio 2026 allorigins era irraggiungibile per ore: è
+     esattamente il guasto che ha fatto sparire gli articoli.)
+     Ora ce ne sono cinque in fila: se il primo non risponde entro
+     nove secondi si passa al successivo. L'ordine viene da prove
+     misurate quel giorno, feed per feed:
+       1. corsproxy.io  regge tutto, risposta sotto il secondo
+       2. corsfix       regge tutto, poco meno di un secondo
+       3. cors.eu.org   buono per gli articoli, YouTube lo rifiuta
+                        (rifiuta subito, non fa perdere tempo)
+       4. e 5. allorigins, due porte dello stesso servizio: ultima
+                        riserva, era giù quel giorno ma per anni ha
+                        funzionato.
+     Sono servizi gratuiti e indipendenti fra loro: perché la sezione
+     resti vuota devono cadere tutti insieme. Se un domani uno di essi
+     chiude o chiede una registrazione, non si rompe niente: fallisce
+     e si passa al successivo.
+     Cambia anche la forma della risposta: quasi tutti restituiscono
+     la pagina così com'è, mentre /get la incarta in un pacchetto con
+     l'etichetta "contents" — da qui il campo "incartato". */
+  /* la strada diretta: nessun intermediario, si chiede la pagina al
+     sito che la ospita. In testa alla fila quando è praticabile. */
+  var DIRETTO = {indirizzo:function(u){ return u; }, incartato:false};
+  var PONTI = [
+    {indirizzo:function(u){ return 'https://corsproxy.io/?url=' + encodeURIComponent(u); }, incartato:false},
+    {indirizzo:function(u){ return 'https://proxy.corsfix.com/?' + u; }, incartato:false},
+    {indirizzo:function(u){ return 'https://cors.eu.org/' + u; }, incartato:false},
+    {indirizzo:function(u){ return 'https://api.allorigins.win/raw?url=' + encodeURIComponent(u); }, incartato:false},
+    {indirizzo:function(u){ return 'https://api.allorigins.win/get?url=' + encodeURIComponent(u); }, incartato:true}
+  ];
+  var ATTESA = 9000;   /* millisecondi prima di dichiarare morto un ponte */
+
+  function scarica(ponte, url){
+    var opzioni = {cache:'no-store'};
+    var timer = null;
+    /* AbortController serve a mollare il colpo se il ponte non risponde:
+       senza, una richiesta appesa terrebbe bloccata la sezione per sempre.
+       Sui browser vecchi che non ce l'hanno si procede lo stesso, solo
+       senza il taglio dei tempi. */
+    if (typeof AbortController !== 'undefined') {
+      var ctrl = new AbortController();
+      opzioni.signal = ctrl.signal;
+      timer = setTimeout(function(){ ctrl.abort(); }, ATTESA);
+    }
+    function basta(){ if (timer) clearTimeout(timer); }
+    return fetch(ponte.indirizzo(url), opzioni)
+      .then(function(r){
+        if (!r.ok) throw new Error('http ' + r.status);
+        if (!ponte.incartato) return r.text();
+        return r.json().then(function(d){
+          if (!d || !d.contents) throw new Error('risposta vuota');
+          return d.contents;
+        });
+      })
+      .then(function(testo){
+        basta();
+        /* una pagina di errore del ponte è corta: se quello che torna
+           sta in poche righe, non è il feed che cercavamo */
+        if (!testo || testo.length < 200) throw new Error('risposta troppo corta');
+        return testo;
+      })
+      .catch(function(err){ basta(); throw err; });
+  }
+
+  /* prendi(url, diretto)
+     diretto = true  -> prima si tenta senza intermediari (articoli)
+     diretto = false -> si parte subito dai ponti (YouTube, che la
+                        lettura diretta la vieta: provarci vorrebbe
+                        dire solo buttare via mezzo secondo) */
+  function prendi(url, diretto){
+    var fila = diretto ? [DIRETTO].concat(PONTI) : PONTI;
+    function prova(i){
+      if (i >= fila.length) return Promise.reject(new Error('nessuna via disponibile'));
+      return scarica(fila[i], url).catch(function(){ return prova(i + 1); });
+    }
+    return prova(0);
+  }
+
+  /* ── Ultimi video da YouTube ──
+     Mostro solo i video lunghi. Vanno esclusi:
+       · le rassegne stampa → sono tutte nella playlist qui sotto,
+         quindi leggo anche il suo feed e scarto quegli ID
+       · gli Short → riconosciuti dal tag nel titolo. Attenzione:
+         il tag va sempre messo, altrimenti lo Short finisce in home
+         (accetto sia #shorts sia il refuso #shots) */
+  var CHANNEL  = 'UCQxD8d7zhz9-OMMvvKPxNvA';
+  var PLAYLIST_RASSEGNA = 'PLUbYXa060CgyN2yuT_LEOX2BkE1I4fA4s';
+  var FEED_BASE = 'https://www.youtube.com/feeds/videos.xml?';
+  var RX_SHORT = /#\s*shor?ts?\b/i;
+  var grid = document.getElementById('vgrid');
+
+  function idsDaFeed(xmlText){
+    var xml = new DOMParser().parseFromString(xmlText, 'text/xml');
+    var nodi = xml.getElementsByTagName('yt:videoId');
+    var set = {};
+    for (var i = 0; i < nodi.length; i++) { set[nodi[i].textContent] = 1; }
+    return set;
+  }
+
+  Promise.all([
+    prendi(FEED_BASE + 'channel_id=' + CHANNEL, false),
+    /* se la playlist non risponde vado avanti lo stesso, senza escluderla */
+    prendi(FEED_BASE + 'playlist_id=' + PLAYLIST_RASSEGNA, false).catch(function(){ return null; })
+  ])
+    .then(function(res){
+      var xmlText = res[0];
+      var esclusi = res[1] ? idsDaFeed(res[1]) : null;
+      var xml = new DOMParser().parseFromString(xmlText, 'text/xml');
+      function txt(e, tag){
+        var n = e.getElementsByTagName(tag)[0];
+        return n ? n.textContent : '';
+      }
+      var entries = Array.prototype.slice.call(xml.getElementsByTagName('entry'))
+        .filter(function(e){
+          var id = txt(e, 'yt:videoId') || txt(e, 'videoId');
+          var t  = txt(e, 'title');
+          if (RX_SHORT.test(t)) return false;
+          if (esclusi) return !esclusi[id];
+          /* ripiego se il feed della playlist non è arrivato */
+          var tl = t.toLowerCase();
+          return tl.indexOf('rassegna') === -1 && tl.indexOf('stampa') === -1;
+        })
+        .sort(function(a, b){
+          return new Date(txt(b, 'published')) - new Date(txt(a, 'published'));
+        })
+        .slice(0, 3);
+      if (!entries.length) throw new Error('vuoto');
+      grid.innerHTML = entries.map(function(e){
+        var id = txt(e, 'yt:videoId') || txt(e, 'videoId');
+        var title = txt(e, 'title');
+        var pub = txt(e, 'published');
+        var d = pub ? new Date(pub).toLocaleDateString('it-IT', {day:'2-digit', month:'short', year:'numeric'}) : '';
+        return '<a href="https://www.youtube.com/watch?v=' + encodeURIComponent(id) + '" target="_blank" rel="noopener" class="vcard">' +
+          '<span class="vthumb">' +
+            '<img src="https://img.youtube.com/vi/' + encodeURIComponent(id) + '/mqdefault.jpg" alt="" loading="lazy" decoding="async">' +
+            '<span class="vplay"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span>' +
+          '</span>' +
+          '<span class="vinfo">' +
+            '<span class="vtitle">' + esc(title) + '</span>' +
+            '<span class="vdate">' + esc(d) + '</span>' +
+          '</span>' +
+        '</a>';
+      }).join('');
+    })
+    .catch(function(){
+      grid.innerHTML = '<div class="loading">Non riesco a caricare i video adesso. ' +
+        '<a href="https://www.youtube.com/@final_step_bitcoin" target="_blank" rel="noopener">Guardali sul canale ↗</a></div>';
+    });
+
+  /* ══════════ ARTICOLI ══════════
+     Gli articoli si leggono DA NOSTR, cioè dalla fonte originale: sono
+     eventi di tipo 30023 (i post lunghi) firmati con la tua chiave.
+     È la strada più diretta che esista — niente sito di mezzo, niente
+     ponti — e funziona perché i relay parlano via WebSocket, che non
+     ha le restrizioni che il browser impone alle pagine normali.
+
+     PERCHÉ PIÙ DI UN RELAY. Nessun relay li ha tutti: il 27 luglio 2026
+     angor e gulugulu ne avevano 5, nostr.mom e lang.relays 4, nos.lol 2.
+     Interrogandoli insieme escono tutti e 7. È il funzionamento normale
+     di Nostr: si chiede a più relay e si uniscono le risposte, buttando
+     via i doppioni. Nota: relay.primal.net NON ha i tuoi articoli, pur
+     essendo il client con cui li hai scritti — fa da cache per la sua
+     app, non da archivio. Non ha senso metterlo qui.
+
+     DOVE PORTANO I LINK. All'articolo su news.21milioni.com. L'indirizzo
+     si ricostruisce dall'identificativo dell'evento (il tag "d"), che è
+     esattamente il nome della pagina sul sito: verificati tutti e sette,
+     rispondono tutti.
+
+     SE I RELAY TACCIONO si ripiega sulla vecchia strada: leggere la
+     pagina del sito e raccogliere i link. Così la sezione resta piena
+     anche nel caso peggiore. */
+  var FEED = 'https://news.21milioni.com/npub17ugguepv89nvdrd72j7j25ymuts6w3d3lnsg6f0xgm2ah8zskhqq3v5ulj.html';
+  var CHIAVE = 'f7108e642c3966c68dbe54bd25509be2e1a745b1fce08d25e646d5db9c50b5c0';
+  var RELAY = [
+    'wss://relay.angor.io',
+    'wss://relay.gulugulu.moe/foxtrot-xray-lantern',
+    'wss://nostr.mom',
+    'wss://lang.relays.land/it',
+    'wss://nos.lol'
+  ];
+  var SITO_ARTICOLI = 'https://news.21milioni.com/';
+  var ATTESA_RELAY = 7000;   /* oltre questo, ci si accontenta di ciò che è arrivato */
+  var box = document.getElementById('artbox');
+
+  function daiRelay(){
+    if (typeof WebSocket === 'undefined') return Promise.resolve([]);
+    return new Promise(function(risolvi){
+      var trovati = {};        /* chiave: l'identificativo "d" dell'articolo */
+      var rimasti = RELAY.length;
+      var finito = false;
+
+      function chiudi(){
+        if (finito) return;
+        finito = true;
+        var lista = [];
+        for (var k in trovati) {
+          if (Object.prototype.hasOwnProperty.call(trovati, k)) lista.push(trovati[k]);
+        }
+        /* dal più recente al più vecchio */
+        lista.sort(function(a, b){ return b.quando - a.quando; });
+        risolvi(lista);
+      }
+      var scadenza = setTimeout(chiudi, ATTESA_RELAY);
+      function unoInMeno(){
+        rimasti--;
+        if (rimasti <= 0) { clearTimeout(scadenza); chiudi(); }
+      }
+
+      RELAY.forEach(function(indirizzo){
+        var ws;
+        try { ws = new WebSocket(indirizzo); } catch (e) { unoInMeno(); return; }
+        var chiuso = false;
+        function saluta(){ if (chiuso) return; chiuso = true; try { ws.close(); } catch (e) {} unoInMeno(); }
+        /* un relay lento non deve tenere in ostaggio gli altri */
+        setTimeout(saluta, ATTESA_RELAY);
+
+        ws.onopen = function(){
+          ws.send(JSON.stringify(['REQ', 'fsb', {authors:[CHIAVE], kinds:[30023], limit:20}]));
+        };
+        ws.onerror = saluta;
+        ws.onclose = saluta;
+        ws.onmessage = function(ev){
+          var m;
+          try { m = JSON.parse(ev.data); } catch (e) { return; }
+          if (m[0] === 'EOSE' || m[0] === 'CLOSED') { saluta(); return; }
+          if (m[0] !== 'EVENT' || !m[2] || m[2].kind !== 30023) return;
+          var e = m[2];
+          function tag(nome){
+            var t = (e.tags || []).filter(function(x){ return x[0] === nome; })[0];
+            return t ? t[1] : '';
+          }
+          var d = tag('d');
+          var titolo = (tag('title') || '').replace(/\s+/g, ' ').trim();
+          if (!d || !titolo) return;
+          var quando = parseInt(tag('published_at'), 10) || e.created_at || 0;
+          /* se due relay hanno lo stesso articolo tengo la versione
+             firmata più di recente: è quella corretta dall'autore */
+          if (trovati[d] && trovati[d].firmato >= e.created_at) return;
+          trovati[d] = {
+            url: SITO_ARTICOLI + encodeURIComponent(d) + '.html',
+            title: titolo,
+            copertina: tag('image'),
+            quando: quando,
+            firmato: e.created_at
+          };
+        };
+      });
+    });
+  }
+
+  /* La vecchia strada, tenuta come ripiego: si legge la pagina del sito
+     e si raccolgono i link agli articoli. */
+  function dallaPagina(){
+    return prendi(FEED, true).then(function(html){
+      var doc = new DOMParser().parseFromString(html, 'text/html');
+      var visti = {};
+      var posts = [];
+      Array.prototype.forEach.call(doc.querySelectorAll('a[href]'), function(a){
+        var h = a.getAttribute('href') || '';
+        if (h.indexOf('.html') === -1 || h.indexOf('npub') > -1) return;
+        var head = a.querySelector('h1,h2,h3,h4');
+        var title = head ? head.textContent : '';
+        if (!title.trim()) {
+          var im = a.querySelector('img[alt]');
+          title = im ? im.getAttribute('alt') : '';
+        }
+        title = title.replace(/\s+/g, ' ').trim();
+        if (title.length < 16) return;
+        var full = h.indexOf('http') === 0 ? h : 'https://news.21milioni.com' + (h.charAt(0) === '/' ? h : '/' + h);
+        if (visti[full]) return;
+        visti[full] = 1;
+        posts.push({url: full, title: title});
+      });
+      return posts;
+    });
+  }
+
+  /* LE COPERTINE. Gli eventi Nostr portano l'indirizzo dell'immagine di
+     copertina, ma sono i file originali caricati da Primal: pesano fra
+     0,4 e 3,2 MB l'uno (misurati). Sei schede vorrebbero dire quattordici
+     megabyte, che su rete mobile è inaccettabile.
+     Quindi le faccio ridimensionare al volo da wsrv.nl, un servizio
+     gratuito di ritaglio immagini: 640px di larghezza in formato webp
+     porta la stessa copertina da 2,4 MB a 56 KB, quarantacinque volte
+     meno. Se il servizio non risponde, l'immagine ripiega da sola
+     sull'originale (ci pensa l'attributo onerror). */
+  function copertina(url){
+    return 'https://wsrv.nl/?url=' + encodeURIComponent(url) + '&w=640&output=webp&q=82';
+  }
+
+  function mostraArticoli(posts){
+    if (!posts || !posts.length) throw new Error('vuoto');
+    /* Con le copertine sto sulle schede, sei per due file piene. Senza
+       (succede solo col ripiego dal sito, che le copertine non le vede)
+       torno all'elenco di righe: meglio una lista pulita che schede
+       con dei buchi al posto delle immagini. */
+    var conCopertina = posts.filter(function(p){ return p.copertina; }).length === posts.length;
+
+    if (conCopertina) {
+      var cards = posts.slice(0, 6).map(function(p){
+        var data = p.quando
+          ? new Date(p.quando * 1000).toLocaleDateString('it-IT', {day:'2-digit', month:'short', year:'numeric'})
+          : '';
+        return '<a href="' + esc(p.url) + '" target="_blank" rel="noopener" class="acard">' +
+          '<span class="vthumb">' +
+            '<img src="' + esc(copertina(p.copertina)) + '" data-originale="' + esc(p.copertina) + '" ' +
+              'alt="" loading="lazy" decoding="async">' +
+            '<span class="vplay"><b>→</b></span>' +
+          '</span>' +
+          '<span class="vinfo">' +
+            '<span class="vtitle">' + esc(p.title) + '</span>' +
+            '<span class="vdate">' + esc(data) + '</span>' +
+          '</span>' +
+        '</a>';
+      }).join('');
+      box.innerHTML = '<div class="agrid">' + cards + '</div>';
+      /* se il servizio di ridimensionamento non risponde, ogni immagine
+         ripiega sul file originale su Blossom: pesante, ma meglio di un
+         riquadro vuoto. Il controllo si disinnesca da solo dopo il primo
+         tentativo, così non si entra in un ciclo infinito. */
+      Array.prototype.forEach.call(box.querySelectorAll('img[data-originale]'), function(img){
+        img.addEventListener('error', function(){
+          var vero = img.getAttribute('data-originale');
+          img.removeAttribute('data-originale');
+          if (vero) img.src = vero;
+        });
+      });
+      return;
+    }
+
+    var rows = posts.slice(0, 8).map(function(p, i){
+      return '<a href="' + esc(p.url) + '" target="_blank" rel="noopener" class="art">' +
+        '<span class="art-n">' + (i < 9 ? '0' : '') + (i + 1) + '</span>' +
+        '<span class="art-t">' + esc(p.title) + '</span>' +
+        '<span class="art-x">→</span>' +
+      '</a>';
+    }).join('');
+    box.innerHTML = '<div class="arts">' + rows + '</div>';
+  }
+
+  daiRelay()
+    .then(function(lista){
+      if (lista.length) return mostraArticoli(lista);
+      return dallaPagina().then(mostraArticoli);
+    })
+    .catch(function(){
+      return dallaPagina().then(mostraArticoli);
+    })
+    .catch(function(){
+      box.innerHTML = '<div class="loading">Non riesco a caricare gli articoli adesso. ' +
+        '<a href="' + FEED + '" target="_blank" rel="noopener">Leggili su news.21milioni.com ↗</a></div>';
+    });
+})();
+</script>
+</body>
+</html>
