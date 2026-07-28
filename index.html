@@ -826,7 +826,12 @@ footer{border-top:1px solid var(--line);background:rgba(0,0,0,.28)}
       <h2>Video recenti</h2>
     </div>
     <div class="vgrid rise" id="vgrid">
-      <div class="loading">Caricamento video…</div>
+      <!-- VIDEO:INIZIO — scritto dal compito automatico (.github/scripts/aggiorna-video.py).
+           Non modificare a mano: al prossimo aggiornamento verrebbe sovrascritto. -->
+      <a href="https://www.youtube.com/watch?v=AE8WriuRvVc" target="_blank" rel="noopener" class="vcard"><span class="vthumb"><img src="https://img.youtube.com/vi/AE8WriuRvVc/mqdefault.jpg" alt="" loading="lazy" decoding="async"><span class="vplay"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></span><span class="vinfo"><span class="vtitle">BLITZ WALLET: Tutorial completo. A chi lo consiglio (e a chi no)</span><span class="vdate">22 lug 2026</span></span></a>
+      <a href="https://www.youtube.com/watch?v=KI37pJ6qYk4" target="_blank" rel="noopener" class="vcard"><span class="vthumb"><img src="https://img.youtube.com/vi/KI37pJ6qYk4/mqdefault.jpg" alt="" loading="lazy" decoding="async"><span class="vplay"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></span><span class="vinfo"><span class="vtitle">MARCO AMADORI E LA BITCOIN VALLEY DI ROVERETO</span><span class="vdate">15 lug 2026</span></span></a>
+      <a href="https://www.youtube.com/watch?v=rLb7C5qyWOE" target="_blank" rel="noopener" class="vcard"><span class="vthumb"><img src="https://img.youtube.com/vi/rLb7C5qyWOE/mqdefault.jpg" alt="" loading="lazy" decoding="async"><span class="vplay"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></span><span class="vinfo"><span class="vtitle">Binance, MiCA e autocustodia: perché è arrivato il momento di riprendersi i propri Bitcoin</span><span class="vdate">08 lug 2026</span></span></a>
+      <!-- VIDEO:FINE -->
     </div>
     <div class="more">
       <a href="https://www.youtube.com/@final_step_bitcoin" target="_blank" rel="noopener">Tutti i video ↗</a>
@@ -1368,75 +1373,19 @@ footer{border-top:1px solid var(--line);background:rgba(0,0,0,.28)}
   }
 
   /* ── Ultimi video da YouTube ──
-     Mostro solo i video lunghi. Vanno esclusi:
-       · le rassegne stampa → sono tutte nella playlist qui sotto,
-         quindi leggo anche il suo feed e scarto quegli ID
-       · gli Short → riconosciuti dal tag nel titolo. Attenzione:
-         il tag va sempre messo, altrimenti lo Short finisce in home
-         (accetto sia #shorts sia il refuso #shots) */
-  var CHANNEL  = 'UCQxD8d7zhz9-OMMvvKPxNvA';
-  var PLAYLIST_RASSEGNA = 'PLUbYXa060CgyN2yuT_LEOX2BkE1I4fA4s';
-  var FEED_BASE = 'https://www.youtube.com/feeds/videos.xml?';
-  var RX_SHORT = /#\s*shor?ts?\b/i;
-  var grid = document.getElementById('vgrid');
+     NON si leggono più dal browser. Fino al 28 luglio 2026 la pagina
+     andava a chiedere il feed di YouTube a ogni visita, passando per un
+     servizio-ponte esterno: YouTube vieta la lettura diretta dal browser.
+     Quei ponti sono gratuiti e di terzi, e cadono — quel giorno erano
+     giù o saturi tutti insieme, e la sezione video sparì.
 
-  function idsDaFeed(xmlText){
-    var xml = new DOMParser().parseFromString(xmlText, 'text/xml');
-    var nodi = xml.getElementsByTagName('yt:videoId');
-    var set = {};
-    for (var i = 0; i < nodi.length; i++) { set[nodi[i].textContent] = 1; }
-    return set;
-  }
+     Adesso l'elenco lo scrive il compito automatico su GitHub
+     (.github/workflows/video.yml) direttamente dentro la pagina, una
+     volta al giorno. Il visitatore riceve i video già pronti: più
+     veloce, e senza dipendere da nessuno.
 
-  Promise.all([
-    prendi(FEED_BASE + 'channel_id=' + CHANNEL, false),
-    /* se la playlist non risponde vado avanti lo stesso, senza escluderla */
-    prendi(FEED_BASE + 'playlist_id=' + PLAYLIST_RASSEGNA, false).catch(function(){ return null; })
-  ])
-    .then(function(res){
-      var xmlText = res[0];
-      var esclusi = res[1] ? idsDaFeed(res[1]) : null;
-      var xml = new DOMParser().parseFromString(xmlText, 'text/xml');
-      function txt(e, tag){
-        var n = e.getElementsByTagName(tag)[0];
-        return n ? n.textContent : '';
-      }
-      var entries = Array.prototype.slice.call(xml.getElementsByTagName('entry'))
-        .filter(function(e){
-          var id = txt(e, 'yt:videoId') || txt(e, 'videoId');
-          var t  = txt(e, 'title');
-          if (RX_SHORT.test(t)) return false;
-          if (esclusi) return !esclusi[id];
-          /* ripiego se il feed della playlist non è arrivato */
-          var tl = t.toLowerCase();
-          return tl.indexOf('rassegna') === -1 && tl.indexOf('stampa') === -1;
-        })
-        .sort(function(a, b){
-          return new Date(txt(b, 'published')) - new Date(txt(a, 'published'));
-        })
-        .slice(0, 3);
-      if (!entries.length) throw new Error('vuoto');
-      grid.innerHTML = entries.map(function(e){
-        var id = txt(e, 'yt:videoId') || txt(e, 'videoId');
-        var title = txt(e, 'title');
-        var pub = txt(e, 'published');
-        var d = pub ? new Date(pub).toLocaleDateString('it-IT', {day:'2-digit', month:'short', year:'numeric'}) : '';
-        return '<a href="https://www.youtube.com/watch?v=' + encodeURIComponent(id) + '" target="_blank" rel="noopener" class="vcard">' +
-          '<span class="vthumb">' +
-            '<img src="https://img.youtube.com/vi/' + encodeURIComponent(id) + '/mqdefault.jpg" alt="" loading="lazy" decoding="async">' +
-            '<span class="vplay"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span>' +
-          '</span>' +
-          '<span class="vinfo">' +
-            '<span class="vtitle">' + esc(title) + '</span>' +
-            '<span class="vdate">' + esc(d) + '</span>' +
-          '</span>' +
-        '</a>';
-      }).join('');
-    })
-    .catch(function(){
-      grid.innerHTML = '<div class="loading">Non riesco a caricare i video adesso. ' +
-        '<a href="https://www.youtube.com/@final_step_bitcoin" target="_blank" rel="noopener">Guardali sul canale ↗</a></div>';
-    });
+     I ponti qui sopra restano: servono ancora al ripiego degli articoli,
+     che legge il sito di 21 Milioni se i relay non rispondono. */
 
   /* ══════════ ARTICOLI ══════════
      Gli articoli si leggono DA NOSTR, cioè dalla fonte originale: sono

@@ -1,0 +1,41 @@
+# Aggiorna da solo l'elenco dei video sul sito.
+#
+# Gira una volta al giorno: legge il feed del canale YouTube, riscrive le
+# tre schede dentro index.html e pubblica solo se e' cambiato qualcosa.
+# Se pubblichi un video e lo vuoi subito online senza aspettare il giro
+# notturno: scheda "Actions" del repository -> questo compito -> "Run workflow".
+
+name: Aggiorna i video dal canale
+
+on:
+  schedule:
+    # 05:17 UTC = 07:17 in Italia (06:17 con l'ora solare).
+    # Il minuto strano e' voluto: GitHub accoda i compiti che partono
+    # all'ora tonda, e uno spostato di qualche minuto parte prima.
+    - cron: '17 5 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  aggiorna:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Scarica il sito
+        uses: actions/checkout@v4
+
+      - name: Rileggi il feed e riscrivi le schede
+        run: python3 .github/scripts/aggiorna-video.py
+
+      - name: Pubblica, ma solo se e' cambiato qualcosa
+        run: |
+          if [ -z "$(git status --porcelain index.html)" ]; then
+            echo "Nessun video nuovo: non pubblico niente."
+            exit 0
+          fi
+          git config user.name  "Aggiornamento automatico"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Video: aggiornato l'elenco dal canale YouTube"
+          git push
