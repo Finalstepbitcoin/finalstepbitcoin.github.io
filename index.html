@@ -1306,12 +1306,18 @@ footer{border-top:1px solid var(--line);background:rgba(0,0,0,.28)}
   /* la strada diretta: nessun intermediario, si chiede la pagina al
      sito che la ospita. In testa alla fila quando è praticabile. */
   var DIRETTO = {indirizzo:function(u){ return u; }, incartato:false};
+  /* I ponti servono a leggere il feed di YouTube, che vieta la lettura
+     diretta dal browser. Si provano in ordine: il primo che risponde vince.
+     Vanno tenuti solo quelli utilizzabili da chiunque: corsproxy.io e
+     corsfix.com sono stati tolti il 28 luglio 2026 perche' pretendono che
+     il dominio sia registrato da loro, quindi rispondevano sempre 403 e
+     facevano solo perdere tempo alla fila. */
   var PONTI = [
-    {indirizzo:function(u){ return 'https://corsproxy.io/?url=' + encodeURIComponent(u); }, incartato:false},
-    {indirizzo:function(u){ return 'https://proxy.corsfix.com/?' + u; }, incartato:false},
-    {indirizzo:function(u){ return 'https://cors.eu.org/' + u; }, incartato:false},
+    {indirizzo:function(u){ return 'https://api.cors.lol/?url=' + encodeURIComponent(u); }, incartato:false},
     {indirizzo:function(u){ return 'https://api.allorigins.win/raw?url=' + encodeURIComponent(u); }, incartato:false},
-    {indirizzo:function(u){ return 'https://api.allorigins.win/get?url=' + encodeURIComponent(u); }, incartato:true}
+    {indirizzo:function(u){ return 'https://api.allorigins.win/get?url=' + encodeURIComponent(u); }, incartato:true},
+    {indirizzo:function(u){ return 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(u); }, incartato:false},
+    {indirizzo:function(u){ return 'https://cors.eu.org/' + u; }, incartato:false}
   ];
   var ATTESA = 9000;   /* millisecondi prima di dichiarare morto un ponte */
 
