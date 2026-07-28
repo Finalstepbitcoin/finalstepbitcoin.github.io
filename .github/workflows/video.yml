@@ -9,10 +9,19 @@ name: Aggiorna i video dal canale
 
 on:
   schedule:
-    # 05:17 UTC = 07:17 in Italia (06:17 con l'ora solare).
-    # Il minuto strano e' voluto: GitHub accoda i compiti che partono
-    # all'ora tonda, e uno spostato di qualche minuto parte prima.
-    - cron: '17 5 * * *'
+    # PLAK pubblica i video verso le 11:15 italiane, quindi si controlla
+    # subito dopo. GitHub pero' ragiona sempre in UTC e non sa niente
+    # dell'ora legale, percio' servono due righe:
+    #   09:20 UTC = 11:20 in Italia d'estate
+    #   10:20 UTC = 11:20 in Italia d'inverno
+    # Quella fuori stagione trova che non c'e' niente di nuovo e non
+    # pubblica: costa nulla e cosi' l'orario e' giusto tutto l'anno.
+    - cron: '20 9 * * *'
+    - cron: '20 10 * * *'
+    # Secondo giro un'ora dopo, come rete di sicurezza: i compiti a
+    # orario di GitHub partono spesso in ritardo, e a volte il feed di
+    # YouTube ci mette qualche minuto ad accorgersi del video nuovo.
+    - cron: '20 12 * * *'
   workflow_dispatch:
 
 permissions:
