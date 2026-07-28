@@ -646,18 +646,21 @@ footer{border-top:1px solid var(--line);background:rgba(0,0,0,.28)}
   .stat:nth-last-child(-n+2){border-bottom:none}
   .art{grid-template-columns:auto 1fr;gap:14px}
   .art-x{display:none}
-  /* la scala diventa un elenco leggibile */
+  /* La scala diventa un elenco leggibile: le barre non si reggono su
+     uno schermo stretto. Le righe sono volutamente basse — dentro c'e'
+     una parola sola, e otto riquadri alti si mangiavano mezzo schermo
+     di telefono prima ancora di arrivare al primo contenuto. */
   .scala-bars{display:none}
-  .scala-labs{grid-template-columns:1fr;gap:4px}
+  .scala-labs{grid-template-columns:1fr;gap:3px}
   .lab{
-    height:auto;justify-content:flex-start;align-items:center;padding:13px 17px;
+    height:auto;justify-content:flex-start;align-items:center;padding:7px 13px;
     background:var(--ink-2);border-radius:var(--r-sm);counter-increment:grad;
     border-left:3px solid var(--c);
   }
-  .lab span{writing-mode:horizontal-tb;letter-spacing:.14em}
+  .lab span{writing-mode:horizontal-tb;letter-spacing:.12em;line-height:1.35}
   .lab::before{
-    content:counter(grad,decimal-leading-zero);font-family:var(--mono);font-size:10.5px;
-    color:var(--mute-2);margin-right:15px;font-variant-numeric:tabular-nums;
+    content:counter(grad,decimal-leading-zero);font-family:var(--mono);font-size:9.5px;
+    color:var(--mute-2);margin-right:11px;font-variant-numeric:tabular-nums;
   }
   .lab--end{background:var(--grad)}
   .lab--end span,.lab--end::before{color:#1A0E00}
