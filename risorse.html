@@ -65,10 +65,10 @@
      La pagina e' divisa in GRUPPI. Ogni gruppo e' un blocco
      <section class="ris-gruppo">, con il suo titolo e la sua griglia di
      schede. Adesso i gruppi sono due:
-       MN · Mnemonica BIP39
-       PP · Passphrase, metodo Diceware
-     Per farne un terzo, copia un blocco <section class="ris-gruppo"> intero,
-     cambia la sigla (due lettere) e il titolo.
+       Mnemonica BIP39
+       Passphrase, metodo Diceware
+     Per farne un terzo, copia un blocco <section class="ris-gruppo"> intero
+     e cambia il titolo.
 
      Ogni risorsa dentro al gruppo e' un blocco
      <article class="risorsa"> ... </article> con, in fondo, una o due righe
@@ -81,7 +81,9 @@
      Le liste di altri hanno due righe e la targhetta vuota con la lingua.
 
      PER AGGIUNGERE UNA RISORSA copia un <article> intero e cambia:
-       1. la sigla   MN·01 → MN·03 …   (serve solo a numerarle)
+       1. il numero  dentro <span class="ris-code"> — vanno contati di
+                     seguito su TUTTA la pagina (01, 02, 03 …), non uno per
+                     gruppo, altrimenti ci si ritrova due schede "01"
        2. il titolo  dentro <h3 class="ris-name">
        3. la targhetta dentro <span class="ris-tag">
        4. il testo   dentro <p class="ris-desc">
@@ -117,10 +119,10 @@
 
     <!-- ══════ GRUPPO 1 · MNEMONICA BIP39 ══════ -->
     <section class="ris-gruppo rise">
-      <h2 class="ris-gruppo-lbl"><b>MN</b> Mnemonica BIP39</h2>
+      <h2 class="ris-gruppo-lbl">Mnemonica BIP39</h2>
       <div class="risorse">
 
-        <!-- ── MN·01 · LA LISTA ──
+        <!-- ── 01 · LA LISTA ──
              Il percorso e' il file dentro il repository ufficiale delle BIP,
              cioe' il documento che ha DEFINITO lo standard. Non una copia:
              la fonte. Verificato l'8 agosto 2026, 2048 parole esatte.
@@ -129,7 +131,7 @@
              metterle vicine farebbe pensare che siano intercambiabili. -->
         <article class="risorsa">
           <div class="ris-head">
-            <span class="ris-code">MN·01</span>
+            <span class="ris-code">01</span>
             <span class="ris-tag">Inglese</span>
           </div>
           <h3 class="ris-name">Lista delle 2048 parole BIP39</h3>
@@ -162,13 +164,13 @@
           </div>
         </article>
 
-        <!-- ── MN·02 · LA NOSTRA SCHEDA ──
+        <!-- ── 02 · LA NOSTRA SCHEDA ──
              Una riga sola: e' roba nostra, non c'e' nessun "percorso
              ufficiale" da citare. Sorgente e build in
              ~/Desktop/CLAUDE CODE/dispositivo-checksum/scheda-bip39/ -->
         <article class="risorsa">
           <div class="ris-head">
-            <span class="ris-code">MN·02</span>
+            <span class="ris-code">02</span>
             <span class="ris-tag ris-tag--nostra">Scheda del canale</span>
           </div>
           <h3 class="ris-name">Da binario a mnemonica BIP39</h3>
@@ -197,10 +199,10 @@
 
     <!-- ══════ GRUPPO 2 · PASSPHRASE, METODO DICEWARE ══════ -->
     <section class="ris-gruppo rise">
-      <h2 class="ris-gruppo-lbl"><b>PP</b> Passphrase · metodo Diceware</h2>
+      <h2 class="ris-gruppo-lbl">Passphrase · metodo Diceware</h2>
       <div class="risorse">
 
-        <!-- ── PP·01 · LISTA INGLESE ──
+        <!-- ── 03 · LISTA INGLESE ──
              Qui il percorso porta alla PAGINA di Arnold Reinhold, non al file.
              Motivo: il file della lista e' firmato con PGP, quindi si apre come
              un muro di testo con dentro la firma, e chi ci clicca senza sapere
@@ -208,7 +210,7 @@
              anche la spiegazione del metodo scritta da lui. -->
         <article class="risorsa">
           <div class="ris-head">
-            <span class="ris-code">PP·01</span>
+            <span class="ris-code">03</span>
             <span class="ris-tag">Inglese</span>
           </div>
           <h3 class="ris-name">Lista delle parole Diceware</h3>
@@ -242,7 +244,7 @@
           </div>
         </article>
 
-        <!-- ── PP·02 · LISTA ITALIANA ──
+        <!-- ── 04 · LISTA ITALIANA ──
              ATTENZIONE, e' una cosa che si confonde facilmente: questa lista NON
              sta sul sito di Reinhold. L'ha fatta Tarin Gamberini e sta sul suo
              sito; Reinhold la CITA dalla sua pagina, nell'elenco delle lingue.
@@ -253,7 +255,7 @@
              indipendenti, lo stesso numero da' parole diverse. -->
         <article class="risorsa">
           <div class="ris-head">
-            <span class="ris-code">PP·02</span>
+            <span class="ris-code">04</span>
             <span class="ris-tag">Italiano</span>
           </div>
           <h3 class="ris-name">Lista delle parole Diceware in italiano</h3>
@@ -288,12 +290,12 @@
           </div>
         </article>
 
-        <!-- ── PP·03 · LA NOSTRA SCHEDA ──
-             Una riga sola, come la MN·02. Sorgente e build in
+        <!-- ── 05 · LA NOSTRA SCHEDA ──
+             Una riga sola, come la 02. Sorgente e build in
              ~/Desktop/CLAUDE CODE/dispositivo-checksum/scheda-diceware/ -->
         <article class="risorsa">
           <div class="ris-head">
-            <span class="ris-code">PP·03</span>
+            <span class="ris-code">05</span>
             <span class="ris-tag ris-tag--nostra">Scheda del canale</span>
           </div>
           <h3 class="ris-name">Dai dadi alle parole Diceware</h3>
@@ -381,6 +383,11 @@
   if (y) y.textContent = new Date().getFullYear();
 })();
 </script>
+
+<!-- Statistiche del sito. Lo script sta sul nostro sito, non sul loro CDN:
+     spiegazione completa dentro counter.js. Per spegnere le statistiche
+     basta cancellare questa riga. -->
+<script src="counter.js" data-id="f5f23bd3-c357-4ac5-91c8-a65ffc2fc1d1" data-utcoffset="2"></script>
 
 </body>
 </html>

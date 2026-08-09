@@ -454,19 +454,13 @@ footer .brand .scritta{height:32px}
 /* I due gruppi (Mnemonica BIP39 · Passphrase Diceware). Stessa riga di
    titolo usata dai gruppi di sponsor piu' in basso: filetto sotto e
    lettere spaziate. La differenza e' che qui il titolo e' un vero <h2>,
-   perche' sono le due parti in cui si divide la pagina. */
+   perche' sono le due parti in cui si divide la pagina, e non ha nessuna
+   sigla davanti: c'e' solo il nome. */
 .ris-gruppo + .ris-gruppo{margin-top:clamp(44px,5.5vw,68px)}
 .ris-gruppo-lbl{
   font-family:var(--display);font-size:clamp(17px,2.1vw,23px);font-weight:600;
   letter-spacing:.13em;text-transform:uppercase;color:var(--bone);
   border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:18px;
-  display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;
-}
-/* la sigla davanti al titolo, in sfumatura come i gruppi di sponsor */
-.ris-gruppo-lbl b{
-  font-family:var(--mono);font-size:11px;letter-spacing:.2em;font-weight:500;
-  color:var(--orange);
-  background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
 }
 .risorse{display:grid;grid-template-columns:repeat(2,1fr);gap:13px}
 .risorsa{
