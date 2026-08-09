@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Risorse — Final Step Bitcoin</title>
+<meta name="description" content="Mnemonica BIP39 e passphrase col metodo Diceware: le liste di parole ufficiali, i PDF impaginati e le schede da compilare a penna. Tutto gratuito, tutto da stampare.">
+<meta property="og:title" content="Risorse — Final Step Bitcoin">
+<meta property="og:description" content="Le liste BIP39 e Diceware e le schede da stampare per generare mnemonica e passphrase a mano.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0A0908">
+<link rel="canonical" href="https://finalstepbitcoin.com/risorse.html">
+<link rel="icon" href="img/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<!-- La grafica e' la stessa della home e sta tutta in stile.css:
+     se cambi un colore li', cambia su tutte e due le pagine. -->
+<link rel="stylesheet" href="stile.css">
+</head>
+<body>
+
+<!-- gli strati dello sfondo: stanno dietro a tutto e non sono cliccabili -->
+<div class="sfondo" aria-hidden="true">
+  <span class="fulmini"></span>
+  <span class="aurora aurora--1"></span>
+  <span class="aurora aurora--2"></span>
+  <span class="grana"></span>
+</div>
+
+<!-- ══════════ NAV ══════════
+     Stesse voci della home, ma qui ogni voce deve TORNARE alla home e
+     poi scendere alla sezione: per questo iniziano tutte con
+     "index.html#". Solo "Risorse" resta su questa pagina, ed e' la voce
+     accesa (class="on"). Se un giorno aggiungi o togli una voce nella
+     home, ricordati di rifarlo anche qui. -->
+<div class="nav-shell">
+  <nav>
+    <a href="index.html" class="brand">
+      <img class="marchio" src="img/logo.webp" width="34" height="34" alt="">
+      <img class="scritta" src="img/scritta.webp?v=3" width="1219" height="275" alt="Final Step Bitcoin">
+    </a>
+    <div class="nav-links" id="navlinks">
+      <a href="index.html#home">Home</a>
+      <a href="index.html#chi-sono">Chi sono</a>
+      <a href="index.html#video">Video</a>
+      <a href="index.html#podcast">Podcast</a>
+      <a href="index.html#articoli">Articoli</a>
+      <a href="index.html#supportami">Supportami</a>
+      <a href="index.html#consulenze">Consulenze</a>
+      <a href="index.html#contatti">Contatti</a>
+      <a href="risorse.html" class="on">Risorse</a>
+    </div>
+    <button class="burger" id="burger" aria-label="Apri il menu" aria-expanded="false" aria-controls="navlinks">&#9776;</button>
+  </nav>
+  <div class="hazard" aria-hidden="true"></div>
+</div>
+
+<!-- ══════════ RISORSE ══════════
+     COME E' ORGANIZZATA QUESTA PAGINA — istruzioni per te, non si vedono
+     online.
+
+     La pagina e' divisa in GRUPPI. Ogni gruppo e' un blocco
+     <section class="ris-gruppo">, con il suo titolo e la sua griglia di
+     schede. Adesso i gruppi sono due:
+       MN · Mnemonica BIP39
+       PP · Passphrase, metodo Diceware
+     Per farne un terzo, copia un blocco <section class="ris-gruppo"> intero,
+     cambia la sigla (due lettere) e il titolo.
+
+     Ogni risorsa dentro al gruppo e' un blocco
+     <article class="risorsa"> ... </article> con, in fondo, una o due righe
+     cliccabili:
+       - PERCORSO UFFICIALE  → il sito da cui viene la lista (link esterno)
+       - FILE PDF SCARICABILE → il file dentro la cartella risorse/
+
+     Le schede fatte da NOI hanno una riga sola (il PDF) e la targhetta
+     piena: <span class="ris-tag ris-tag--nostra">Scheda del canale</span>.
+     Le liste di altri hanno due righe e la targhetta vuota con la lingua.
+
+     PER AGGIUNGERE UNA RISORSA copia un <article> intero e cambia:
+       1. la sigla   MN·01 → MN·03 …   (serve solo a numerarle)
+       2. il titolo  dentro <h3 class="ris-name">
+       3. la targhetta dentro <span class="ris-tag">
+       4. il testo   dentro <p class="ris-desc">
+       5. gli indirizzi delle righe in fondo
+
+     PER I PDF: il file va messo nella cartella  risorse/  (la cartella, non
+     questo file: si chiamano quasi uguale ma sono due cose diverse) e
+     l'indirizzo diventa  risorse/nome-del-file.pdf . L'attributo
+     download="…" e' il nome che il file avra' sul computer di chi scarica,
+     quindi scrivilo per esteso e comprensibile.
+
+     SE UNA RIGA NON E' ANCORA PRONTA la si puo' spegnere: si sostituisce
+     <a class="ris-via" href="…">  con  <div class="ris-via ris-via--off">
+     (e </a> con </div>), si toglie la freccia e si scrive "In arrivo".
+
+     NOTA sui percorsi lunghi: il testo che si vede NON deve per forza
+     essere l'indirizzo intero. Se e' lunghissimo, sul telefono va a capo
+     tre volte. Meglio una versione corta: il link porta comunque
+     all'indirizzo completo, quello scritto in href.
+     ═════════════════════════════════════════════════════════════════ -->
+<main class="sec sec--pagina" id="risorse">
+  <div class="wrap">
+    <a class="torna" href="index.html">← Torna alla home</a>
+    <div class="sec-head rise">
+      <h1 class="titolo-pagina">Risorse</h1>
+    </div>
+    <p class="lede rise" style="margin-bottom:clamp(30px,4vw,44px)">
+      Le liste e le schede a cui faccio riferimento nei video. Delle liste trovi
+      il <em>percorso ufficiale</em>, per poterle verificare da solo, e il
+      <em>PDF già impaginato</em> da stampare. Le schede da compilare a penna le ho
+      preparate io per il canale: sono <em>gratuite</em>, come tutto il resto.
+    </p>
+
+    <!-- ══════ GRUPPO 1 · MNEMONICA BIP39 ══════ -->
+    <section class="ris-gruppo rise">
+      <h2 class="ris-gruppo-lbl"><b>MN</b> Mnemonica BIP39</h2>
+      <div class="risorse">
+
+        <!-- ── MN·01 · LA LISTA ──
+             Il percorso e' il file dentro il repository ufficiale delle BIP,
+             cioe' il documento che ha DEFINITO lo standard. Non una copia:
+             la fonte. Verificato l'8 agosto 2026, 2048 parole esatte.
+             SOLO INGLESE, per scelta: sul repository esiste anche la lista
+             italiana, ma quasi tutti i portafogli lavorano con l'inglese e
+             metterle vicine farebbe pensare che siano intercambiabili. -->
+        <article class="risorsa">
+          <div class="ris-head">
+            <span class="ris-code">MN·01</span>
+            <span class="ris-tag">Inglese</span>
+          </div>
+          <h3 class="ris-name">Lista delle 2048 parole BIP39</h3>
+          <p class="ris-desc">
+            Le 2048 parole con cui si scrive la frase di recupero di un portafoglio
+            Bitcoin. Sono sempre le stesse, per ogni portafoglio: se una parola non
+            è in questa lista, non è una parola valida.
+          </p>
+          <div class="ris-vie">
+            <a class="ris-via" href="https://github.com/bitcoin/bips/blob/master/bip-0039/english.txt" target="_blank" rel="noopener">
+              <span class="ris-ic">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#FA9D07" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></svg>
+              </span>
+              <span class="ris-txt">
+                <span class="ris-lbl">Percorso ufficiale</span>
+                <span class="ris-val">github.com/bitcoin/bips · english.txt</span>
+              </span>
+              <span class="ris-x" aria-hidden="true">↗</span>
+            </a>
+            <a class="ris-via" href="risorse/lista-bip39-2048-parole.pdf" download="Lista BIP39 - 2048 parole.pdf">
+              <span class="ris-ic">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#FA9D07" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 11 5 5 5-5"/><path d="M4 19h16"/></svg>
+              </span>
+              <span class="ris-txt">
+                <span class="ris-lbl">File PDF scaricabile</span>
+                <span class="ris-val">Scarica la lista · 8 pagine</span>
+              </span>
+              <span class="ris-x" aria-hidden="true">↓</span>
+            </a>
+          </div>
+        </article>
+
+        <!-- ── MN·02 · LA NOSTRA SCHEDA ──
+             Una riga sola: e' roba nostra, non c'e' nessun "percorso
+             ufficiale" da citare. Sorgente e build in
+             ~/Desktop/CLAUDE CODE/dispositivo-checksum/scheda-bip39/ -->
+        <article class="risorsa">
+          <div class="ris-head">
+            <span class="ris-code">MN·02</span>
+            <span class="ris-tag ris-tag--nostra">Scheda del canale</span>
+          </div>
+          <h3 class="ris-name">Da binario a mnemonica BIP39</h3>
+          <p class="ris-desc">
+            La scheda che ho preparato per il canale: si compila a penna e trasforma
+            i tuoi lanci di dadi o monete nei numeri delle parole BIP39. Copre le
+            prime 23 parole — la ventiquattresima dipende dal checksum, e quella è
+            un'altra storia. Tre pagine A4.
+          </p>
+          <div class="ris-vie">
+            <a class="ris-via" href="risorse/scheda-bip39-da-binario-a-mnemonica.pdf" download="Scheda BIP39 - da binario a mnemonica.pdf">
+              <span class="ris-ic">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#FA9D07" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 11 5 5 5-5"/><path d="M4 19h16"/></svg>
+              </span>
+              <span class="ris-txt">
+                <span class="ris-lbl">File PDF scaricabile</span>
+                <span class="ris-val">Scarica la scheda · 3 pagine</span>
+              </span>
+              <span class="ris-x" aria-hidden="true">↓</span>
+            </a>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ══════ GRUPPO 2 · PASSPHRASE, METODO DICEWARE ══════ -->
+    <section class="ris-gruppo rise">
+      <h2 class="ris-gruppo-lbl"><b>PP</b> Passphrase · metodo Diceware</h2>
+      <div class="risorse">
+
+        <!-- ── PP·01 · LISTA INGLESE ──
+             Qui il percorso porta alla PAGINA di Arnold Reinhold, non al file.
+             Motivo: il file della lista e' firmato con PGP, quindi si apre come
+             un muro di testo con dentro la firma, e chi ci clicca senza sapere
+             cosa sia si spaventa. Dalla pagina la lista e' a un clic, e c'e'
+             anche la spiegazione del metodo scritta da lui. -->
+        <article class="risorsa">
+          <div class="ris-head">
+            <span class="ris-code">PP·01</span>
+            <span class="ris-tag">Inglese</span>
+          </div>
+          <h3 class="ris-name">Lista delle parole Diceware</h3>
+          <p class="ris-desc">
+            7776 parole, una per ogni tiro possibile di cinque dadi: tiri, leggi la
+            parola, la scrivi. È il modo di costruire una password davvero casuale
+            senza doversi fidare di un programma. La pagina originale di
+            <strong>Arnold Reinhold</strong>, che il metodo l'ha inventato.
+          </p>
+          <div class="ris-vie">
+            <a class="ris-via" href="https://theworld.com/~reinhold/diceware.html" target="_blank" rel="noopener">
+              <span class="ris-ic">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#FA9D07" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></svg>
+              </span>
+              <span class="ris-txt">
+                <span class="ris-lbl">Percorso ufficiale</span>
+                <span class="ris-val">theworld.com/~reinhold/diceware.html</span>
+              </span>
+              <span class="ris-x" aria-hidden="true">↗</span>
+            </a>
+            <a class="ris-via" href="risorse/lista-diceware-inglese.pdf" download="Lista Diceware in inglese.pdf">
+              <span class="ris-ic">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#FA9D07" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 11 5 5 5-5"/><path d="M4 19h16"/></svg>
+              </span>
+              <span class="ris-txt">
+                <span class="ris-lbl">File PDF scaricabile</span>
+                <span class="ris-val">Scarica la lista · 8 pagine</span>
+              </span>
+              <span class="ris-x" aria-hidden="true">↓</span>
+            </a>
+          </div>
+        </article>
+
+        <!-- ── PP·02 · LISTA ITALIANA ──
+             ATTENZIONE, e' una cosa che si confonde facilmente: questa lista NON
+             sta sul sito di Reinhold. L'ha fatta Tarin Gamberini e sta sul suo
+             sito; Reinhold la CITA dalla sua pagina, nell'elenco delle lingue.
+             Per questo la scheda scrive il suo nome: non e' una traduzione
+             ufficiale, e' la traduzione che l'ideatore riconosce.
+             Verificata l'8 agosto 2026: versione 4 del 2019, 7776 parole.
+             Nota: NON e' la traduzione della lista inglese. Le due liste sono
+             indipendenti, lo stesso numero da' parole diverse. -->
+        <article class="risorsa">
+          <div class="ris-head">
+            <span class="ris-code">PP·02</span>
+            <span class="ris-tag">Italiano</span>
+          </div>
+          <h3 class="ris-name">Lista delle parole Diceware in italiano</h3>
+          <p class="ris-desc">
+            Anche qui 7776 parole, ma in italiano: molto più facili da leggere e da
+            ricopiare a mano senza sbagliare. Curata da <strong>Tarin Gamberini</strong>
+            ed elencata da Reinhold fra le versioni in altre lingue. Non è la
+            traduzione di quella inglese: è una lista a sé, lo stesso numero dà una
+            parola diversa.
+          </p>
+          <div class="ris-vie">
+            <a class="ris-via" href="https://www.taringamberini.com/it/diceware_it_IT/lista-di-parole-diceware-in-italiano/" target="_blank" rel="noopener">
+              <span class="ris-ic">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#FA9D07" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></svg>
+              </span>
+              <span class="ris-txt">
+                <span class="ris-lbl">Percorso ufficiale</span>
+                <span class="ris-val">taringamberini.com · diceware in italiano</span>
+              </span>
+              <span class="ris-x" aria-hidden="true">↗</span>
+            </a>
+            <a class="ris-via" href="risorse/lista-diceware-italiano.pdf" download="Lista Diceware in italiano.pdf">
+              <span class="ris-ic">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#FA9D07" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 11 5 5 5-5"/><path d="M4 19h16"/></svg>
+              </span>
+              <span class="ris-txt">
+                <span class="ris-lbl">File PDF scaricabile</span>
+                <span class="ris-val">Scarica la lista · 8 pagine</span>
+              </span>
+              <span class="ris-x" aria-hidden="true">↓</span>
+            </a>
+          </div>
+        </article>
+
+        <!-- ── PP·03 · LA NOSTRA SCHEDA ──
+             Una riga sola, come la MN·02. Sorgente e build in
+             ~/Desktop/CLAUDE CODE/dispositivo-checksum/scheda-diceware/ -->
+        <article class="risorsa">
+          <div class="ris-head">
+            <span class="ris-code">PP·03</span>
+            <span class="ris-tag ris-tag--nostra">Scheda del canale</span>
+          </div>
+          <h3 class="ris-name">Dai dadi alle parole Diceware</h3>
+          <p class="ris-desc">
+            La scheda gemella, per la passphrase: cinque dadi, un numero di cinque
+            cifre, una parola. Dieci righe da riempire a penna, con l'entropia già
+            calcolata riga per riga, così vedi quanto è robusta man mano che
+            aggiungi parole. Una pagina A4.
+          </p>
+          <div class="ris-vie">
+            <a class="ris-via" href="risorse/scheda-diceware-dai-dadi-alle-parole.pdf" download="Scheda Diceware - dai dadi alle parole.pdf">
+              <span class="ris-ic">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#FA9D07" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 11 5 5 5-5"/><path d="M4 19h16"/></svg>
+              </span>
+              <span class="ris-txt">
+                <span class="ris-lbl">File PDF scaricabile</span>
+                <span class="ris-val">Scarica la scheda · 1 pagina</span>
+              </span>
+              <span class="ris-x" aria-hidden="true">↓</span>
+            </a>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<!-- ══════════ FOOTER ══════════ -->
+<footer>
+  <div class="hazard" aria-hidden="true"></div>
+  <div class="wrap foot">
+    <a href="index.html" class="brand">
+      <img class="marchio" src="img/logo.webp" width="34" height="34" alt="" loading="lazy">
+      <img class="scritta" src="img/scritta.webp?v=3" width="1219" height="275" alt="Final Step Bitcoin" loading="lazy">
+    </a>
+    <p class="foot-note">
+      © <span id="year">2026</span> Final Step Bitcoin · <a href="mailto:info@finalstepbitcoin.com">info@finalstepbitcoin.com</a>
+      · Nessun contenuto è consulenza finanziaria
+    </p>
+  </div>
+</footer>
+
+<!-- Questa pagina ha bisogno di pochissimo: aprire il menu sul telefono,
+     far comparire le schede scorrendo e scrivere l'anno nel piede. Gli
+     altri automatismi della home (video, articoli, contatori, copia del
+     Lightning Address) qui non servono e non ci sono. -->
+<script>
+(function(){
+  'use strict';
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ── Menu mobile ── */
+  var burger = document.getElementById('burger');
+  var links  = document.getElementById('navlinks');
+  burger.addEventListener('click', function(){
+    var open = links.classList.toggle('open');
+    burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  Array.prototype.forEach.call(links.querySelectorAll('a'), function(a){
+    a.addEventListener('click', function(){
+      links.classList.remove('open');
+      burger.setAttribute('aria-expanded','false');
+    });
+  });
+
+  /* ── Comparsa in scorrimento ── */
+  var risers = document.querySelectorAll('.rise');
+  if (reduce || !('IntersectionObserver' in window)) {
+    Array.prototype.forEach.call(risers, function(el){ el.classList.add('in'); });
+  } else {
+    var ro = new IntersectionObserver(function(en){
+      en.forEach(function(e){
+        if (!e.isIntersecting) return;
+        e.target.classList.add('in');
+        ro.unobserve(e.target);
+      });
+    }, {threshold:0.1, rootMargin:'0px 0px -6% 0px'});
+    Array.prototype.forEach.call(risers, function(el){ ro.observe(el); });
+  }
+
+  /* ── Anno nel piede ── */
+  var y = document.getElementById('year');
+  if (y) y.textContent = new Date().getFullYear();
+})();
+</script>
+
+</body>
+</html>
