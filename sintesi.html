@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SINTESI — il calcolatore BIP39 offline | Final Step Bitcoin</title>
+<meta name="description" content="SINTESI calcola offline l'ultima parola della tua frase di recupero BIP39 e la passphrase col metodo Diceware. Nessuna radio a bordo, non scrive nulla in memoria, firmware verificabile.">
+<meta property="og:title" content="SINTESI — il calcolatore BIP39 offline">
+<meta property="og:description" content="L'ultima parola della tua seed, calcolata senza accendere un computer. Open source, verificabile, senza radio.">
+<meta property="og:type" content="product">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0A0908">
+<link rel="canonical" href="https://finalstepbitcoin.com/sintesi.html">
+<link rel="icon" href="img/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+
+<!-- PAGINA NON ANCORA ANNUNCIATA.
+     Finche' non esce il video, questa riga dice ai motori di ricerca di non
+     indicizzarla: l'indirizzo funziona per chi ce l'ha, ma non compare su
+     Google. TOGLIERE QUESTA RIGA il giorno del lancio, insieme alla voce
+     di menu. -->
+<meta name="robots" content="noindex, nofollow">
+
+<link href="font/caratteri.css" rel="stylesheet">
+<link rel="stylesheet" href="stile.css">
+
+<!-- GRAFICA SOLO DI QUESTA PAGINA.
+     Sta qui dentro e NON in stile.css apposta: stile.css e' condiviso con la
+     home e con risorse.html, quindi ogni riga scritta li' cambia anche loro.
+     Tutto quello che serve solo a SINTESI vive qui, cosi' finche' la pagina
+     e' una prova non puo' rovinare niente del sito gia' online. -->
+<style>
+  /* ── Testata della pagina ── */
+  .sin-hero{text-align:center;padding-top:clamp(10px,2vw,26px)}
+  .sin-marchio{
+    width:min(420px,74vw);height:auto;display:block;margin:0 auto clamp(18px,2.4vw,26px);
+    /* IL MARCHIO NON SI CENTRA DA SOLO. I due fulmini sono inclinati e le
+       loro code sporgono in basso a sinistra: centrando l'immagine sul suo
+       riquadro, la PAROLA sembra spostata a destra. Va pareggiata la fascia
+       delle LETTERE, non l'immagine intera.
+       MISURATO sui pixel di SINTESI@3x.png (998x456): nella fascia delle
+       lettere (righe 128-276) l'inchiostro va da 56 a 956, cioe' 56 px di
+       vuoto a sinistra contro 41 a destra. Il centro e' 7 px a destra del
+       centro dell'immagine: 7/998 = 0,70%.
+       E' una percentuale, quindi resta giusta anche se cambi la larghezza
+       qui sopra. */
+    transform:translateX(-0.70%);
+  }
+  .sin-claim{
+    font-family:var(--display);font-weight:600;
+    font-size:clamp(24px,3.6vw,40px);line-height:1.12;letter-spacing:.01em;
+    color:var(--bone);max-width:19ch;margin:0 auto;
+  }
+  .sin-claim em{
+    font-style:normal;
+    background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  }
+  .sin-sotto{max-width:62ch;margin:clamp(16px,2vw,22px) auto 0}
+
+  /* ── Riquadro della foto, per ora vuoto ──
+       Quando avrai la foto del dispositivo: metti il file in img/ e sostituisci
+       tutto il blocco <div class="sin-foto"> con
+       <img class="sin-foto-vera" src="img/sintesi-foto.webp" alt="Il dispositivo SINTESI acceso">  */
+  .sin-foto{
+    margin:clamp(26px,3.4vw,40px) auto 0;max-width:720px;aspect-ratio:16/10;
+    border:1px dashed var(--line-2);border-radius:var(--r);background:var(--ink-2);
+    display:flex;align-items:center;justify-content:center;text-align:center;padding:20px;
+  }
+  .sin-foto span{
+    font-family:var(--mono);font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--mute-2);
+  }
+  .sin-foto-vera{width:100%;max-width:720px;height:auto;display:block;margin:clamp(26px,3.4vw,40px) auto 0;border-radius:var(--r)}
+
+  /* ── Elenco a passi, per i tre livelli di verifica ── */
+  .sin-passi{list-style:none;display:grid;gap:13px;counter-reset:passo}
+  .sin-passo{
+    display:flex;gap:clamp(14px,2vw,20px);align-items:flex-start;
+    padding:clamp(18px,2.2vw,24px);
+    background:var(--ink-2);border:1px solid var(--line);border-radius:var(--r);
+  }
+  .sin-passo-n{
+    flex:none;width:34px;height:34px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-family:var(--mono);font-size:14px;color:var(--ink);font-weight:600;
+    background:var(--grad);
+  }
+  .sin-passo h3{font-size:clamp(16px,1.7vw,19px);margin:0 0 6px;color:var(--bone)}
+  .sin-passo p{margin:0;color:var(--mute);font-size:clamp(14.5px,1.5vw,16px);line-height:1.62}
+  .sin-passo--nota .sin-passo-n{background:none;border:1px solid var(--line-2);color:var(--mute-2)}
+
+  /* ── Riquadro "cosa NON fa": stesso stile delle schede, bordo spento ── */
+  .sin-limiti{list-style:none;display:grid;gap:11px;margin:0}
+  .sin-limiti li{
+    display:flex;gap:13px;align-items:flex-start;
+    color:var(--mute);font-size:clamp(14.5px,1.5vw,16px);line-height:1.6;
+  }
+  .sin-limiti b{color:var(--bone);font-weight:600}
+  .sin-no{
+    flex:none;font-family:var(--mono);color:var(--orange);
+    font-size:15px;line-height:1.6;
+  }
+
+  /* ── Scheda tecnica: due righe da quattro su schermo grande ── */
+  .sin-dati{margin-top:clamp(22px,2.6vw,30px)}
+
+  /* ── Blocco acquisto ── */
+  .sin-prezzo{
+    font-family:var(--mono);font-size:clamp(34px,5vw,52px);font-weight:500;line-height:1;
+    background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+    font-variant-numeric:tabular-nums;margin:0 0 6px;
+  }
+  .sin-prezzo-nota{
+    font-family:var(--mono);font-size:11px;letter-spacing:.13em;text-transform:uppercase;
+    color:var(--mute-2);margin:0 0 clamp(20px,2.4vw,26px);
+  }
+  .sin-da-decidere{
+    display:inline-block;margin-top:14px;padding:4px 12px;border-radius:30px;
+    border:1px dashed var(--orange);color:var(--orange);
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+  }
+
+  /* La notina sotto il pulsante: nella home sta stretta accanto al bottone
+     del modulo, qui invece e' da sola e va lasciata respirare. */
+  #ordina .privacy{max-width:58ch}
+
+  /* ── Note di licenza in fondo ── */
+  .sin-note{
+    margin-top:clamp(30px,3.6vw,44px);padding-top:clamp(22px,2.6vw,30px);
+    border-top:1px solid var(--line);
+    color:var(--mute-2);font-size:13.5px;line-height:1.7;
+  }
+  .sin-note a{color:var(--mute)}
+
+  @media(max-width:760px){
+    .sin-passo{flex-direction:row}
+    .sin-claim{max-width:100%}
+  }
+</style>
+</head>
+<body>
+
+<!-- gli strati dello sfondo: stanno dietro a tutto e non sono cliccabili -->
+<div class="sfondo" aria-hidden="true">
+  <span class="fulmini"></span>
+  <span class="aurora aurora--1"></span>
+  <span class="aurora aurora--2"></span>
+  <span class="grana"></span>
+</div>
+
+<!-- ══════════ NAV ══════════
+     Identica a quella di risorse.html. NOTA: qui NON c'e' la voce "SINTESI"
+     e nessuna voce e' accesa, perche' per ora la pagina e' nascosta. Il
+     giorno del lancio si aggiunge <a href="sintesi.html">SINTESI</a> in
+     questo menu, nello STESSO punto, in tutte e tre le pagine
+     (index.html, risorse.html e qui, dove va marcata class="on"). -->
+<div class="nav-shell">
+  <nav>
+    <a href="index.html" class="brand">
+      <img class="marchio" src="img/logo.webp" width="34" height="34" alt="">
+      <img class="scritta" src="img/scritta.webp?v=3" width="1219" height="275" alt="Final Step Bitcoin">
+    </a>
+    <div class="nav-links" id="navlinks">
+      <a href="index.html#home">Home</a>
+      <a href="index.html#chi-sono">Chi sono</a>
+      <a href="index.html#video">Video</a>
+      <a href="index.html#podcast">Podcast</a>
+      <a href="index.html#articoli">Articoli</a>
+      <a href="index.html#supportami">Supportami</a>
+      <a href="index.html#consulenze">Consulenze</a>
+      <a href="index.html#contatti">Contatti</a>
+      <a href="risorse.html">Risorse</a>
+    </div>
+    <button class="burger" id="burger" aria-label="Apri il menu" aria-expanded="false" aria-controls="navlinks">&#9776;</button>
+  </nav>
+  <div class="hazard" aria-hidden="true"></div>
+</div>
+
+
+<!-- ══════════ TESTATA ══════════ -->
+<main class="sec sec--pagina" id="sintesi">
+  <div class="wrap">
+    <a class="torna" href="index.html">← Torna alla home</a>
+
+    <div class="sin-hero rise">
+      <h1 class="titolo-pagina" style="margin:0">
+        <img class="sin-marchio" src="img/sintesi-marchio.png" width="998" height="456" alt="SINTESI">
+      </h1>
+      <p class="sin-claim">L'ultima parola della tua seed, <em>senza accendere un computer</em>.</p>
+      <p class="lede sin-sotto">
+        Un dispositivo piccolo, senza radio e senza memoria, che fa una cosa sola:
+        completa la tua frase di recupero BIP39 e ti aiuta a costruire la passphrase
+        coi dadi. Poi lo stacchi, e non resta niente.
+      </p>
+
+      <!-- Qui va la foto del dispositivo, appena ce l'hai. Istruzioni nel
+           blocco <style> in cima, alla voce "Riquadro della foto". -->
+      <div class="sin-foto"><span>Qui va la foto del dispositivo</span></div>
+    </div>
+
+  </div>
+</main>
+
+<hr class="rule">
+
+
+<!-- ══════════ 01 · IL PROBLEMA ══════════ -->
+<section class="sec" id="problema">
+  <div class="wrap">
+    <div class="sec-head rise">
+      <h2 class="titolo-due">
+        <span class="t-su">Il problema</span>
+        Manca sempre l'ultima parola
+      </h2>
+    </div>
+    <p class="lede rise">
+      Se generi la tua frase di recupero a mano — coi dadi, con le monete, senza
+      fidarti di nessun programma — arrivi a <strong>11 parole</strong> (o a 23) e
+      lì ti fermi. L'ultima non è una parola qualsiasi che puoi scegliere a gusto:
+      contiene il <em>checksum</em>, il codice di controllo che dice al portafoglio
+      che tutte le altre sono scritte giuste. Sbagliarla significa che il
+      portafoglio rifiuta la frase.
+    </p>
+    <p class="lede rise">
+      Per calcolarla serve un computer. Ed è esattamente la macchina che, in quel
+      preciso momento, non vorresti accendere. <strong>SINTESI fa solo quel
+      calcolo</strong>, su un dispositivo che non ha modo di parlare con il mondo.
+    </p>
+  </div>
+</section>
+
+<hr class="rule">
+
+
+<!-- ══════════ 02 · COSA FA ══════════
+     Riuso le schede della pagina Risorse (.risorse / .risorsa): stessa
+     grafica, zero righe di CSS nuove. -->
+<section class="sec sec--alt" id="cosa-fa">
+  <div class="wrap">
+    <div class="sec-head rise">
+      <h2 class="titolo-due">
+        <span class="t-su">Cosa fa</span>
+        Due modalità, niente di più
+      </h2>
+    </div>
+    <p class="lede rise" style="margin-bottom:clamp(28px,3.5vw,40px)">
+      Si usano in <strong>sessioni separate</strong>, staccando il cavo in mezzo:
+      così il dispositivo non ha mai in memoria tutte e due le metà del segreto.
+    </p>
+
+    <div class="risorse rise">
+
+      <article class="risorsa">
+        <div class="ris-head">
+          <span class="ris-code">01</span>
+          <span class="ris-tag ris-tag--nostra">Checksum BIP39</span>
+        </div>
+        <h3 class="ris-name">Completa la frase di recupero</h3>
+        <p class="ris-desc">
+          Inserisci le prime 11 parole e il dispositivo ti mostra le
+          <strong>128 candidate</strong> valide in 3,5 secondi; con 23 parole
+          restano <strong>8 candidate</strong>, in 6,3 secondi. A quel punto
+          inserisci i bit di entropia che ti sono avanzati — 7 per la frase da 12
+          parole, 3 per quella da 24 — e la parola giusta è una sola.
+        </p>
+        <p class="ris-desc">
+          Quei bit non sono un dettaglio tecnico: <strong>sono entropia che hai già
+          generato tu</strong> coi dadi e che è rimasta sul foglio. Scegliere invece
+          la parola "che suona meglio" significa buttarla via.
+        </p>
+      </article>
+
+      <article class="risorsa">
+        <div class="ris-head">
+          <span class="ris-code">02</span>
+          <span class="ris-tag ris-tag--nostra">Passphrase Diceware</span>
+        </div>
+        <h3 class="ris-name">Costruisci la passphrase coi dadi</h3>
+        <p class="ris-desc">
+          Cinque dadi per ogni parola, fino a dieci parole, con la lista inglese di
+          <strong>Arnold Reinhold</strong> o quella italiana di
+          <strong>Tarin Gamberini</strong>. Il dispositivo ti mostra sia l'elenco
+          numerato sia la passphrase intera: confrontandoli scopri un errore di
+          trascrizione, che per una passphrase è l'unica rete di sicurezza esistente.
+        </p>
+        <p class="ris-desc">
+          Perché la passphrase, a differenza della frase di recupero,
+          <strong>non ha nessun checksum</strong>: se la scrivi sbagliata non
+          ricevi nessun errore, entri semplicemente in un altro portafoglio, vuoto.
+        </p>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+
+<!-- ══════════ 03 · COM'E' FATTO ══════════ -->
+<section class="sec" id="com-e-fatto">
+  <div class="wrap">
+    <div class="sec-head rise">
+      <h2 class="titolo-due">
+        <span class="t-su">Com'è fatto</span>
+        Offline per costruzione, non per impostazione
+      </h2>
+    </div>
+
+    <ul class="sin-limiti rise" style="gap:15px;max-width:80ch">
+      <li><span class="sin-no">✕</span><span><b>Nessuna radio a bordo.</b> Non c'è WiFi da spegnere né Bluetooth da disattivare: il processore scelto non li ha proprio. Non è una impostazione che qualcuno può cambiare.</span></li>
+      <li><span class="sin-no">✕</span><span><b>Non scrive niente nella memoria permanente.</b> Quando stacchi il cavo, quello che hai inserito sparisce. È anche ciò che rende il firmware verificabile: la memoria resta identica a com'era.</span></li>
+      <li><span class="sin-no">✕</span><span><b>Non deriva chiavi né indirizzi.</b> Per scelta non sa fare i conti che portano dalla frase al portafoglio: anche volendo, non può sapere a quale portafoglio appartiene ciò che gli hai scritto.</span></li>
+      <li><span class="sin-no">✕</span><span><b>Non si collega al computer per funzionare.</b> Si alimenta da un normale caricatore da telefono. Schermo, joystick e quattro tasti: tutto il resto non serve.</span></li>
+    </ul>
+
+    <p class="lede rise" style="margin-top:clamp(24px,3vw,32px)">
+      Alla fine di ogni operazione il dispositivo ti porta a una schermata da cui
+      non si torna indietro: l'unico modo di uscire è <strong>staccare il
+      cavo</strong>. Non è una dimenticanza, è voluto — così l'azzeramento della
+      memoria non resta un consiglio che prima o poi qualcuno non segue.
+    </p>
+  </div>
+</section>
+
+<hr class="rule">
+
+
+<!-- ══════════ 04 · PERCHE' FIDARSI ══════════
+     ORDINE VOLUTO: prima il riflash, poi picotool, per ultima l'impronta.
+     Il riflash e' insieme la strada piu' semplice e la piu' sicura, quindi
+     va per prima. L'impronta e' comoda ma non e' una prova, e la pagina lo
+     dice apertamente: se un domani riscrivi questa sezione, non
+     promuoverla al primo posto. -->
+<section class="sec sec--alt" id="fiducia">
+  <div class="wrap">
+    <div class="sec-head rise">
+      <h2 class="titolo-due">
+        <span class="t-su">Perché fidarsi</span>
+        Non devi fidarti di me
+      </h2>
+    </div>
+    <p class="lede rise" style="margin-bottom:clamp(28px,3.5vw,40px)">
+      Un dispositivo che tocca la tua frase di recupero non si compra sulla parola
+      di chi te lo vende — nemmeno sulla mia. Per questo il codice è aperto e ci
+      sono tre modi, in ordine di difficoltà, per non credermi.
+    </p>
+
+    <ol class="sin-passi rise">
+      <li class="sin-passo">
+        <span class="sin-passo-n">1</span>
+        <div>
+          <h3>Riscrivilo tu</h3>
+          <p>
+            Scarichi il firmware ufficiale, lo trascini sul dispositivo, trenta
+            secondi. Non devi installare niente e non devi verificare niente:
+            da quel momento sopra c'è quello che hai messo tu. È la strada più
+            semplice ed è anche la più sicura.
+          </p>
+        </div>
+      </li>
+      <li class="sin-passo">
+        <span class="sin-passo-n">2</span>
+        <div>
+          <h3>Fatti leggere la memoria dal dispositivo spento</h3>
+          <p>
+            Avviandolo in modalità di recupero risponde il programma di avvio
+            inciso nel chip, con il firmware fermo: puoi copiare la memoria e
+            confrontarla con quella pubblicata. È la verifica vera, perché a
+            rispondere non è il programma sotto esame.
+          </p>
+        </div>
+      </li>
+      <li class="sin-passo sin-passo--nota">
+        <span class="sin-passo-n">3</span>
+        <div>
+          <h3>Le tre parole all'avvio</h3>
+          <p>
+            A ogni accensione il dispositivo mostra la propria impronta come tre
+            parole BIP39: se corrispondono a quelle pubblicate, nessuno l'ha
+            toccato in viaggio. Comodo, immediato — ma va detto chiaramente che
+            <strong>non è una prova</strong>: è il firmware che attesta sé stesso.
+            Per la prova servono i due punti sopra.
+          </p>
+        </div>
+      </li>
+    </ol>
+
+    <p class="lede rise" style="margin-top:clamp(24px,3vw,32px)">
+      In più, ogni dispositivo che spedisco ha un numero di serie con la sua
+      attestazione firmata e pubblicata su Nostr con la mia chiave: la stessa con
+      cui firmo tutto il resto.
+    </p>
+  </div>
+</section>
+
+<hr class="rule">
+
+
+<!-- ══════════ 05 · SCHEDA TECNICA ══════════ -->
+<section class="sec" id="scheda-tecnica">
+  <div class="wrap">
+    <div class="sec-head rise">
+      <h2 class="titolo-due">
+        <span class="t-su">Scheda tecnica</span>
+        I numeri, senza giri di parole
+      </h2>
+    </div>
+
+    <div class="stats sin-dati rise">
+      <div class="stat"><b>3,5s</b><span>128 candidate</span></div>
+      <div class="stat"><b>240px</b><span>schermo a colori</span></div>
+      <div class="stat"><b>0</b><span>radio a bordo</span></div>
+      <div class="stat"><b>0</b><span>byte scritti</span></div>
+    </div>
+
+    <div class="pills rise">
+      <span class="pill">Raspberry Pi Pico 2 · RP2350</span>
+      <span class="pill">Schermo 240×240</span>
+      <span class="pill">Joystick + 4 tasti</span>
+      <span class="pill">Alimentazione micro-USB</span>
+      <span class="pill">MicroPython</span>
+      <span class="pill">Motore derivato da embit</span>
+      <span class="pill">Codice aperto</span>
+      <span class="pill">Riprogrammabile dall'acquirente</span>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+
+<!-- ══════════ 06 · ACQUISTO ══════════
+     ⚠ SEGNAPOSTO — DA COMPLETARE PRIMA DI PUBBLICARE.
+     Mancano due cose che solo tu puoi decidere:
+       1. il PREZZO  → si cambia dentro <p class="sin-prezzo">
+       2. il CANALE DI VENDITA → il pulsante qui sotto e' finto: porta a "#".
+          Se vendi da un negozio esterno, basta cambiare href.
+          Se invece vuoi raccogliere gli ordini via email come le consulenze,
+          dimmelo e al posto del pulsante metto il modulo FormSubmit.
+     Finche' restano i segnaposto NON si pubblica questa pagina. -->
+<section class="sec sec--alt" id="ordina">
+  <div class="wrap">
+    <div class="sec-head rise">
+      <h2 class="titolo-due">
+        <span class="t-su">Averlo</span>
+        Ordina SINTESI
+      </h2>
+    </div>
+
+    <div class="ln rise">
+      <div class="hazard" aria-hidden="true"></div>
+      <div class="ln-in">
+        <p class="sin-prezzo">00,00 €</p>
+        <p class="sin-prezzo-nota">Prezzo da definire · spedizione da definire</p>
+
+        <p class="lede" style="margin:0 0 clamp(22px,2.6vw,30px);max-width:62ch">
+          Te lo spedisco già pronto: firmware caricato, impronta a tre parole
+          verificata e stampata sul foglio che trovi nella scatola, insieme alle
+          istruzioni per riscriverlo da solo se preferisci non fidarti.
+        </p>
+
+        <a class="btn btn--fill" href="#">Ordina ora</a>
+        <span class="sin-da-decidere">Pulsante da collegare</span>
+
+        <p class="privacy" style="margin-top:20px">
+          Il dispositivo non è un portafoglio e non custodisce nulla: è uno
+          strumento di calcolo. Nessun contenuto di questo sito è consulenza
+          finanziaria.
+        </p>
+      </div>
+    </div>
+
+    <div class="sin-note">
+      <p style="margin:0 0 10px">
+        <strong>Attribuzioni.</strong> Dizionario BIP39 dal repository ufficiale
+        delle BIP. Lista Diceware inglese di Arnold Reinhold (CC-BY 4.0), lista
+        italiana di Tarin Gamberini (GPL-3.0-or-later). Il motore dei calcoli
+        deriva da <em>embit</em> (licenza MIT), la stessa libreria usata da
+        SeedSigner e Krux.
+      </p>
+      <p style="margin:0">
+        Il codice del progetto è MIT; il firmware assemblato, contenendo la lista
+        italiana, esce sotto GPL-3.0. Le liste e le schede da stampare che uso nei
+        video sono e restano gratuite: le trovi in <a href="risorse.html">Risorse</a>.
+      </p>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ══════════ FOOTER ══════════ -->
+<footer>
+  <div class="hazard" aria-hidden="true"></div>
+  <div class="wrap foot">
+    <a href="index.html" class="brand">
+      <img class="marchio" src="img/logo.webp" width="34" height="34" alt="" loading="lazy">
+      <img class="scritta" src="img/scritta.webp?v=3" width="1219" height="275" alt="Final Step Bitcoin" loading="lazy">
+    </a>
+    <p class="foot-note">
+      © <span id="year">2026</span> Final Step Bitcoin · <a href="mailto:info@finalstepbitcoin.com">info@finalstepbitcoin.com</a>
+      · Nessun contenuto è consulenza finanziaria
+    </p>
+  </div>
+</footer>
+
+<!-- Come in risorse.html: serve solo il menu del telefono, la comparsa in
+     scorrimento e l'anno nel piede. -->
+<script>
+(function(){
+  'use strict';
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ── Menu mobile ── */
+  var burger = document.getElementById('burger');
+  var links  = document.getElementById('navlinks');
+  burger.addEventListener('click', function(){
+    var open = links.classList.toggle('open');
+    burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  Array.prototype.forEach.call(links.querySelectorAll('a'), function(a){
+    a.addEventListener('click', function(){
+      links.classList.remove('open');
+      burger.setAttribute('aria-expanded','false');
+    });
+  });
+
+  /* ── Comparsa in scorrimento ── */
+  var risers = document.querySelectorAll('.rise');
+  if (reduce || !('IntersectionObserver' in window)) {
+    Array.prototype.forEach.call(risers, function(el){ el.classList.add('in'); });
+  } else {
+    var ro = new IntersectionObserver(function(en){
+      en.forEach(function(e){
+        if (!e.isIntersecting) return;
+        e.target.classList.add('in');
+        ro.unobserve(e.target);
+      });
+    }, {threshold:0.1, rootMargin:'0px 0px -6% 0px'});
+    Array.prototype.forEach.call(risers, function(el){ ro.observe(el); });
+  }
+
+  /* ── Anno nel piede ── */
+  var y = document.getElementById('year');
+  if (y) y.textContent = new Date().getFullYear();
+})();
+</script>
+
+<!-- Statistiche del sito, come sulle altre due pagine. -->
+<script src="counter.js" data-id="f5f23bd3-c357-4ac5-91c8-a65ffc2fc1d1" data-utcoffset="2"></script>
+
+</body>
+</html>
