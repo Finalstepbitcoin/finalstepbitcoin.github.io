@@ -147,11 +147,18 @@
   }
   .sin-bottoni .btn{white-space:nowrap}
 
-  /* ── Il prezzo ── */
+  /* ── Il prezzo, con sotto la parola "donazione" ──
+       La parola resta in minuscolo, al contrario delle altre scritte piccole
+       del sito che vanno tutte in maiuscolo: in maiuscolo le virgolette si
+       perdono e sembra una targhetta qualsiasi. */
   .sin-prezzo{
     font-family:var(--mono);font-size:clamp(30px,4vw,42px);font-weight:500;line-height:1;
     background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
-    font-variant-numeric:tabular-nums;margin:0 0 16px;
+    font-variant-numeric:tabular-nums;margin:0 0 7px;
+  }
+  .sin-prezzo-nota{
+    font-family:var(--mono);font-size:13px;letter-spacing:.04em;
+    color:var(--mute-2);margin:0 0 16px;
   }
   /* Le targhette arancioni tratteggiate sono PROMEMORIA DI LAVORO: segnano i
      pezzi ancora da collegare. Vanno tolte tutte prima di pubblicare -
@@ -541,7 +548,11 @@
         <div class="sin-via-in">
           <span class="sin-via-tag sin-via-tag--caldo">Assemblato</span>
           <h3 class="sin-via-tit">Ricevilo assemblato!</h3>
-          <p class="sin-prezzo">da 35,00 €</p>
+          <p class="sin-prezzo">35,00 €</p>
+          <!-- Le virgolette sono volute: non e' un prezzo, e' una donazione,
+               e le virgolette lo dicono senza doverlo spiegare. NON
+               toglierle pensando che sia un refuso. -->
+          <p class="sin-prezzo-nota">“donazione”</p>
           <p class="sin-via-txt">
             Fai una donazione di almeno <strong>35,00 €</strong> e riceverai il
             dispositivo completo di case, un cavo di alimentazione e la guida
