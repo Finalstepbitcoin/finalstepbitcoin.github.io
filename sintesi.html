@@ -103,18 +103,64 @@
   /* ── Scheda tecnica: due righe da quattro su schermo grande ── */
   .sin-dati{margin-top:clamp(22px,2.6vw,30px)}
 
-  /* ── Blocco acquisto ── */
+  /* ── I DUE BLOCCHI DELL'ULTIMA SEZIONE ──
+       Affiancati sopra i 760 px, uno sopra l'altro sotto. "align-items:
+       stretch" (che e' il valore normale della griglia) tiene i due riquadri
+       ALTI UGUALI anche se il testo dentro e' diverso: se lo togli, quello
+       piu' corto resta a mezz'aria. */
+  .sin-vie{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+  .sin-via{
+    display:flex;flex-direction:column;
+    background:var(--ink-2);border:1px solid var(--line);border-radius:var(--r);
+    padding:clamp(22px,2.6vw,30px);
+    transition:border-color .18s;
+  }
+  .sin-via:hover{border-color:var(--line-2)}
+  /* Il blocco di destra ha la fascia gialla in cima, come il riquadro delle
+     consulenze in home: quindi niente riquadro interno con l'imbottitura,
+     che sta nel suo .sin-via-in. */
+  .sin-via--caldo{padding:0;overflow:hidden;border-color:var(--line-2)}
+  .sin-via-in{padding:clamp(22px,2.6vw,30px);display:flex;flex-direction:column;height:100%}
+  .sin-via-tag{
+    align-self:flex-start;
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--mute-2);border:1px solid var(--line-2);border-radius:30px;padding:5px 12px;
+    margin-bottom:16px;
+  }
+  .sin-via-tag--caldo{background:var(--grad);border-color:transparent;color:#1A0E00;font-weight:600}
+  .sin-via-tit{
+    font-family:var(--display);font-weight:600;
+    font-size:clamp(19px,2.2vw,25px);line-height:1.15;color:var(--bone);
+    margin:0 0 14px;
+  }
+  .sin-via-txt{
+    margin:0 0 14px;color:var(--mute);
+    font-size:clamp(14.5px,1.5vw,16px);line-height:1.62;
+  }
+  .sin-via-txt strong{color:var(--bone)}
+  /* "margin-top:auto" spinge il fondo del riquadro in basso: cosi' i link e
+     i pulsanti dei due blocchi restano allineati fra loro. */
+  .sin-via-fondo{margin-top:auto;padding-top:8px}
+  .sin-bottoni{
+    margin-top:auto;padding-top:8px;
+    display:flex;flex-wrap:wrap;gap:10px;
+  }
+  .sin-bottoni .btn{white-space:nowrap}
+
+  /* ── Il prezzo ── */
   .sin-prezzo{
-    font-family:var(--mono);font-size:clamp(34px,5vw,52px);font-weight:500;line-height:1;
+    font-family:var(--mono);font-size:clamp(30px,4vw,42px);font-weight:500;line-height:1;
     background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
-    font-variant-numeric:tabular-nums;margin:0 0 6px;
+    font-variant-numeric:tabular-nums;margin:0 0 16px;
   }
-  .sin-prezzo-nota{
-    font-family:var(--mono);font-size:11px;letter-spacing:.13em;text-transform:uppercase;
-    color:var(--mute-2);margin:0 0 clamp(20px,2.4vw,26px);
-  }
+  /* Le targhette arancioni tratteggiate sono PROMEMORIA DI LAVORO: segnano i
+     pezzi ancora da collegare. Vanno tolte tutte prima di pubblicare -
+     cercale con "sin-da-decidere". "align-self:flex-start" serve perche'
+     dentro i riquadri, che sono in colonna, altrimenti si allargherebbero
+     per tutta la riga. */
   .sin-da-decidere{
-    display:inline-block;margin-top:14px;padding:4px 12px;border-radius:30px;
+    display:inline-block;align-self:flex-start;
+    margin-top:14px;padding:4px 12px;border-radius:30px;
     border:1px dashed var(--orange);color:var(--orange);
     font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
   }
@@ -134,6 +180,13 @@
   @media(max-width:760px){
     .sin-passo{flex-direction:row}
     .sin-claim{max-width:100%}
+    /* I due blocchi si mettono uno sopra l'altro: resta primo quello
+       gratuito, cioe' quello scritto prima nel testo. */
+    .sin-vie{grid-template-columns:1fr}
+    /* Su schermo stretto i due pulsanti vanno larghi tutta la riga, uno
+       sotto l'altro: affiancati diventerebbero due francobolli. */
+    .sin-bottoni{flex-direction:column;align-items:stretch}
+    .sin-bottoni .btn{text-align:center}
   }
 </style>
 </head>
@@ -429,46 +482,93 @@
 <hr class="rule">
 
 
-<!-- ══════════ 06 · ACQUISTO ══════════
-     ⚠ SEGNAPOSTO — DA COMPLETARE PRIMA DI PUBBLICARE.
-     Mancano due cose che solo tu puoi decidere:
-       1. il PREZZO  → si cambia dentro <p class="sin-prezzo">
-       2. il CANALE DI VENDITA → il pulsante qui sotto e' finto: porta a "#".
-          Se vendi da un negozio esterno, basta cambiare href.
-          Se invece vuoi raccogliere gli ordini via email come le consulenze,
-          dimmelo e al posto del pulsante metto il modulo FormSubmit.
+<!-- ══════════ 06 · AVERLO ══════════
+     DUE BLOCCHI AFFIANCATI: a sinistra la strada gratuita (te lo costruisci),
+     a destra quella comoda (te lo mando io). Sotto i 760 px di larghezza si
+     mettono uno sopra l'altro da soli, con quello di destra che resta
+     secondo: chi legge da telefono vede prima la strada gratuita.
+
+     ⚠ TRE SEGNAPOSTO DA RIEMPIRE PRIMA DI PUBBLICARE. Sono marcati anche
+     nel codice qui sotto con la scritta DA-COLLEGARE:
+       1. l'indirizzo del progetto su GitHub (oggi il repository e' PRIVATO:
+          finche' resta cosi', il link da' pagina non trovata)
+       2. l'indirizzo Telegram
+       3. l'indirizzo del prodotto su Barattolo
      Finche' restano i segnaposto NON si pubblica questa pagina. -->
 <section class="sec sec--alt" id="ordina">
   <div class="wrap">
     <div class="sec-head rise">
       <h2 class="titolo-due">
         <span class="t-su">Averlo</span>
-        Ordina SINTESI
+        Costruiscilo, o fattelo mandare
       </h2>
     </div>
 
-    <div class="ln rise">
-      <div class="hazard" aria-hidden="true"></div>
-      <div class="ln-in">
-        <p class="sin-prezzo">00,00 €</p>
-        <p class="sin-prezzo-nota">Prezzo da definire · spedizione da definire</p>
+    <div class="sin-vie rise">
 
-        <p class="lede" style="margin:0 0 clamp(22px,2.6vw,30px);max-width:62ch">
-          Te lo spedisco già pronto: firmware caricato, impronta a tre parole
-          verificata e stampata sul foglio che trovi nella scatola, insieme alle
-          istruzioni per riscriverlo da solo se preferisci non fidarti.
+      <!-- ── A SINISTRA · TE LO FAI DA SOLO ── -->
+      <article class="sin-via">
+        <span class="sin-via-tag">Gratis</span>
+        <h3 class="sin-via-tit">Costruisciti il dispositivo in autonomia!</h3>
+        <p class="sin-via-txt">
+          Il progetto è aperto: schema dei collegamenti, firmware, dizionari e
+          istruzioni sono tutti pubblici. Le parti costano una quindicina di
+          euro e si trovano ovunque, non serve saldare niente e il firmware si
+          carica trascinando un file. Se te lo fai da solo non devi fidarti di
+          me su niente.
         </p>
+        <div class="sin-via-fondo">
+          <!-- DA-COLLEGARE 1: indirizzo del progetto su GitHub -->
+          <a class="ris-via" href="https://github.com/Finalstepbitcoin/sintesi" target="_blank" rel="noopener">
+            <span class="ris-ic">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#FA9D07" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></svg>
+            </span>
+            <span class="ris-txt">
+              <span class="ris-lbl">Il progetto, per intero</span>
+              <span class="ris-val">github.com/Finalstepbitcoin/sintesi</span>
+            </span>
+            <span class="ris-x" aria-hidden="true">↗</span>
+          </a>
+          <span class="sin-da-decidere">Repository ancora privato</span>
+        </div>
+      </article>
 
-        <a class="btn btn--fill" href="#">Ordina ora</a>
-        <span class="sin-da-decidere">Pulsante da collegare</span>
+      <!-- ── A DESTRA · TE LO MANDO IO ──
+           Questo e' il blocco "caldo": ha la fascia gialla in cima, come il
+           riquadro delle consulenze in home. -->
+      <article class="sin-via sin-via--caldo">
+        <div class="hazard" aria-hidden="true"></div>
+        <div class="sin-via-in">
+          <span class="sin-via-tag sin-via-tag--caldo">Assemblato</span>
+          <h3 class="sin-via-tit">Ricevilo assemblato!</h3>
+          <p class="sin-prezzo">da 35,00 €</p>
+          <p class="sin-via-txt">
+            Fai una donazione di almeno <strong>35,00 €</strong> e riceverai il
+            dispositivo completo di case, un cavo di alimentazione e la guida
+            pratica. <strong>Spedizione inclusa.</strong>
+          </p>
+          <p class="sin-via-txt">
+            Arriva già pronto: firmware caricato e impronta a tre parole
+            verificata e stampata sul foglio dentro la scatola, insieme alle
+            istruzioni per riscriverlo da solo se preferisci non fidarti.
+          </p>
+          <div class="sin-bottoni">
+            <!-- DA-COLLEGARE 2: indirizzo Telegram -->
+            <a class="btn btn--fill" href="#" target="_blank" rel="noopener">Scrivimi su Telegram</a>
+            <!-- DA-COLLEGARE 3: indirizzo del prodotto su Barattolo -->
+            <a class="btn btn--line" href="#" target="_blank" rel="noopener">Compralo su Barattolo</a>
+          </div>
+          <span class="sin-da-decidere">Due pulsanti da collegare</span>
+        </div>
+      </article>
 
-        <p class="privacy" style="margin-top:20px">
-          Il dispositivo non è un portafoglio e non custodisce nulla: è uno
-          strumento di calcolo. Nessun contenuto di questo sito è consulenza
-          finanziaria.
-        </p>
-      </div>
     </div>
+
+    <p class="privacy rise" style="margin-top:clamp(20px,2.4vw,26px)">
+      Il dispositivo non è un portafoglio e non custodisce nulla: è uno
+      strumento di calcolo. Nessun contenuto di questo sito è consulenza
+      finanziaria.
+    </p>
 
     <div class="sin-note">
       <p style="margin:0 0 10px">
