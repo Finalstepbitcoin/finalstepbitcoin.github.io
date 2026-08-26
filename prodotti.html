@@ -3,6 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- La pagina si chiama "prodotti" perche' un domani ne ospitera' piu' di
+     uno, ma oggi il prodotto e' uno solo: quindi il titolo qui sotto, che e'
+     quello che si vede nella scheda del browser e quando qualcuno condivide
+     il link, parla di SINTESI. Quando aggiungerai un secondo prodotto,
+     cambia questo titolo (e anche description e og:title poco sotto). -->
 <title>SINTESI — il calcolatore BIP39 offline | Final Step Bitcoin</title>
 <meta name="description" content="SINTESI calcola offline l'ultima parola della tua frase di recupero BIP39 e la passphrase col metodo Diceware. Nessuna radio a bordo, non scrive nulla in memoria, firmware verificabile.">
 <meta property="og:title" content="SINTESI — il calcolatore BIP39 offline">
@@ -10,7 +15,7 @@
 <meta property="og:type" content="product">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0A0908">
-<link rel="canonical" href="https://finalstepbitcoin.com/sintesi.html">
+<link rel="canonical" href="https://finalstepbitcoin.com/prodotti.html">
 <link rel="icon" href="img/favicon-32.png" sizes="32x32">
 <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
 
@@ -208,11 +213,17 @@
 </div>
 
 <!-- ══════════ NAV ══════════
-     Identica a quella di risorse.html. NOTA: qui NON c'e' la voce "SINTESI"
-     e nessuna voce e' accesa, perche' per ora la pagina e' nascosta. Il
-     giorno del lancio si aggiunge <a href="sintesi.html">SINTESI</a> in
-     questo menu, nello STESSO punto, in tutte e tre le pagine
-     (index.html, risorse.html e qui, dove va marcata class="on"). -->
+     Identica a quella di risorse.html. NOTA: qui NON c'e' la voce "Prodotti"
+     e nessuna voce e' accesa, perche' per ora la pagina e' nascosta.
+
+     IL GIORNO DEL LANCIO, per accendere la voce di menu, aggiungi questa
+     riga in TUTTE E TRE le pagine, sempre nello stesso punto (qui sotto io
+     l'ho messa prima di "Risorse"):
+         <a href="prodotti.html">Prodotti</a>
+     - in index.html e in risorse.html va cosi' com'e';
+     - QUI dentro va invece con la voce accesa:
+         <a href="prodotti.html" class="on">Prodotti</a>
+     E ricordati di togliere la riga "noindex" in cima al file. -->
 <div class="nav-shell">
   <nav>
     <a href="index.html" class="brand">
@@ -495,12 +506,12 @@
      mettono uno sopra l'altro da soli, con quello di destra che resta
      secondo: chi legge da telefono vede prima la strada gratuita.
 
-     ⚠ TRE SEGNAPOSTO DA RIEMPIRE PRIMA DI PUBBLICARE. Sono marcati anche
+     ⚠ DUE SEGNAPOSTO DA RIEMPIRE PRIMA DI PUBBLICARE. Sono marcati anche
      nel codice qui sotto con la scritta DA-COLLEGARE:
        1. l'indirizzo del progetto su GitHub (oggi il repository e' PRIVATO:
           finche' resta cosi', il link da' pagina non trovata)
-       2. l'indirizzo Telegram
-       3. l'indirizzo del prodotto su Barattolo
+       2. l'indirizzo del prodotto su Barattolo
+     Telegram e' gia' collegato: https://t.me/plakbtc
      Finche' restano i segnaposto NON si pubblica questa pagina. -->
 <section class="sec sec--alt" id="ordina">
   <div class="wrap">
@@ -564,12 +575,11 @@
             istruzioni per riscriverlo da solo se preferisci non fidarti.
           </p>
           <div class="sin-bottoni">
-            <!-- DA-COLLEGARE 2: indirizzo Telegram -->
-            <a class="btn btn--fill" href="#" target="_blank" rel="noopener">Scrivimi su Telegram</a>
-            <!-- DA-COLLEGARE 3: indirizzo del prodotto su Barattolo -->
+            <a class="btn btn--fill" href="https://t.me/plakbtc" target="_blank" rel="noopener">Scrivimi su Telegram</a>
+            <!-- DA-COLLEGARE 2: indirizzo del prodotto su Barattolo -->
             <a class="btn btn--line" href="#" target="_blank" rel="noopener">Compralo su Barattolo</a>
           </div>
-          <span class="sin-da-decidere">Due pulsanti da collegare</span>
+          <span class="sin-da-decidere">Barattolo da collegare</span>
         </div>
       </article>
 
