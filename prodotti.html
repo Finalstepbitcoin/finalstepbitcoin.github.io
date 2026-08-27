@@ -6,11 +6,11 @@
 <!-- La pagina si chiama "prodotti" perche' un domani ne ospitera' piu' di
      uno, ma oggi il prodotto e' uno solo: quindi il titolo qui sotto, che e'
      quello che si vede nella scheda del browser e quando qualcuno condivide
-     il link, parla di SINTESI. Quando aggiungerai un secondo prodotto,
+     il link, parla di PRISMA. Quando aggiungerai un secondo prodotto,
      cambia questo titolo (e anche description e og:title poco sotto). -->
-<title>SINTESI — il calcolatore BIP39 offline | Final Step Bitcoin</title>
-<meta name="description" content="SINTESI calcola offline l'ultima parola della tua frase di recupero BIP39 e la passphrase col metodo Diceware. Nessuna radio a bordo, non scrive nulla in memoria, firmware verificabile.">
-<meta property="og:title" content="SINTESI — il calcolatore BIP39 offline">
+<title>PRISMA — il calcolatore BIP39 offline | Final Step Bitcoin</title>
+<meta name="description" content="PRISMA calcola offline l'ultima parola della tua frase di recupero BIP39 e la passphrase col metodo Diceware. Nessuna radio a bordo, non scrive nulla in memoria, firmware verificabile.">
+<meta property="og:title" content="PRISMA — il calcolatore BIP39 offline">
 <meta property="og:description" content="L'ultima parola della tua seed, calcolata senza accendere un computer. Open source, verificabile, senza radio.">
 <meta property="og:type" content="product">
 <meta name="twitter:card" content="summary_large_image">
@@ -32,24 +32,20 @@
 <!-- GRAFICA SOLO DI QUESTA PAGINA.
      Sta qui dentro e NON in stile.css apposta: stile.css e' condiviso con la
      home e con risorse.html, quindi ogni riga scritta li' cambia anche loro.
-     Tutto quello che serve solo a SINTESI vive qui, cosi' finche' la pagina
+     Tutto quello che serve solo a PRISMA vive qui, cosi' finche' la pagina
      e' una prova non puo' rovinare niente del sito gia' online. -->
 <style>
   /* ── Testata della pagina ── */
   .sin-hero{text-align:center;padding-top:clamp(10px,2vw,26px)}
   .sin-marchio{
     width:min(420px,74vw);height:auto;display:block;margin:0 auto clamp(18px,2.4vw,26px);
-    /* IL MARCHIO NON SI CENTRA DA SOLO. I due fulmini sono inclinati e le
-       loro code sporgono in basso a sinistra: centrando l'immagine sul suo
-       riquadro, la PAROLA sembra spostata a destra. Va pareggiata la fascia
-       delle LETTERE, non l'immagine intera.
-       MISURATO sui pixel di SINTESI@3x.png (998x456): nella fascia delle
-       lettere (righe 128-276) l'inchiostro va da 56 a 956, cioe' 56 px di
-       vuoto a sinistra contro 41 a destra. Il centro e' 7 px a destra del
-       centro dell'immagine: 7/998 = 0,70%.
-       E' una percentuale, quindi resta giusta anche se cambi la larghezza
-       qui sopra. */
-    transform:translateX(-0.70%);
+    /* IL MARCHIO SI CENTRA DA SOLO. Col vecchio nome servivano due fulmini
+       ai lati, le cui code sbilanciavano la parola verso destra e andavano
+       compensate. PRISMA ha un fulmine solo, al centro, al posto della S.
+       MISURATO sui pixel di PRISMA@3x.png (870x456): nella fascia delle
+       lettere (righe 128-276) l'inchiostro va da 42 a 827, cioe' 42 px di
+       vuoto a sinistra e 42 a destra. Il centro delle lettere cade a mezzo
+       pixel dal centro dell'immagine: nessuna correzione da fare. */
   }
   .sin-claim{
     font-family:var(--display);font-weight:600;
@@ -65,7 +61,7 @@
   /* ── Riquadro della foto, per ora vuoto ──
        Quando avrai la foto del dispositivo: metti il file in img/ e sostituisci
        tutto il blocco <div class="sin-foto"> con
-       <img class="sin-foto-vera" src="img/sintesi-foto.webp" alt="Il dispositivo SINTESI acceso">  */
+       <img class="sin-foto-vera" src="img/prisma-foto.webp" alt="Il dispositivo PRISMA acceso">  */
   .sin-foto{
     margin:clamp(26px,3.4vw,40px) auto 0;max-width:720px;aspect-ratio:16/10;
     border:1px dashed var(--line-2);border-radius:var(--r);background:var(--ink-2);
@@ -248,13 +244,13 @@
 
 
 <!-- ══════════ TESTATA ══════════ -->
-<main class="sec sec--pagina" id="sintesi">
+<main class="sec sec--pagina" id="prisma">
   <div class="wrap">
     <a class="torna" href="index.html">← Torna alla home</a>
 
     <div class="sin-hero rise">
       <h1 class="titolo-pagina" style="margin:0">
-        <img class="sin-marchio" src="img/sintesi-marchio.png" width="998" height="456" alt="SINTESI">
+        <img class="sin-marchio" src="img/prisma-marchio.png" width="870" height="456" alt="PRISMA">
       </h1>
       <p class="sin-claim">L'ultima parola della tua seed, <em>senza accendere un computer</em>.</p>
       <p class="lede sin-sotto">
@@ -293,7 +289,7 @@
     </p>
     <p class="lede rise">
       Per calcolarla serve un computer. Ed è esattamente la macchina che, in quel
-      preciso momento, non vorresti accendere. <strong>SINTESI fa solo quel
+      preciso momento, non vorresti accendere. <strong>PRISMA fa solo quel
       calcolo</strong>, su un dispositivo che non ha modo di parlare con il mondo.
     </p>
   </div>
@@ -537,13 +533,13 @@
         </p>
         <div class="sin-via-fondo">
           <!-- DA-COLLEGARE 1: indirizzo del progetto su GitHub -->
-          <a class="ris-via" href="https://github.com/Finalstepbitcoin/sintesi" target="_blank" rel="noopener">
+          <a class="ris-via" href="https://github.com/Finalstepbitcoin/prisma" target="_blank" rel="noopener">
             <span class="ris-ic">
               <svg viewBox="0 0 24 24" fill="none" stroke="#FA9D07" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></svg>
             </span>
             <span class="ris-txt">
               <span class="ris-lbl">Il progetto, per intero</span>
-              <span class="ris-val">github.com/Finalstepbitcoin/sintesi</span>
+              <span class="ris-val">github.com/Finalstepbitcoin/prisma</span>
             </span>
             <span class="ris-x" aria-hidden="true">↗</span>
           </a>
