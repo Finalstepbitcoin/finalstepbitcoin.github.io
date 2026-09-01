@@ -8,23 +8,29 @@
      quello che si vede nella scheda del browser e quando qualcuno condivide
      il link, parla di PRISMA. Quando aggiungerai un secondo prodotto,
      cambia questo titolo (e anche description e og:title poco sotto). -->
-<title>PRISMA — il calcolatore BIP39 offline | Final Step Bitcoin</title>
-<meta name="description" content="PRISMA calcola offline l'ultima parola della tua frase di recupero BIP39 e la passphrase col metodo Diceware. Nessuna radio a bordo, non scrive nulla in memoria, firmware verificabile.">
-<meta property="og:title" content="PRISMA — il calcolatore BIP39 offline">
-<meta property="og:description" content="L'ultima parola della tua seed, calcolata senza accendere un computer. Open source, verificabile, senza radio.">
+<title>PRISMA, ultima parola BIP39 e passphrase — Final Step Bitcoin</title>
+<meta name="description" content="Il tuo calcolatore offline: l'ultima parola della tua mnemonica BIP39 e la passphrase dai dadi. Senza Wi-Fi, senza Bluetooth, senza memoria.">
+<meta property="og:title" content="PRISMA — il tuo calcolatore offline">
+<meta property="og:description" content="L'ultima parola della tua mnemonica e la conversione dei dadi per la passphrase. Tutto senza un computer e senza internet.">
 <meta property="og:type" content="product">
+<!-- L'immagine che compare quando qualcuno incolla il link su Telegram, X o
+     WhatsApp. L'indirizzo DEVE essere scritto per esteso, con https e dominio:
+     quei siti leggono la pagina da fuori e un indirizzo accorciato tipo
+     "img/..." per loro non esiste. Il file e' un JPG e non il WebP usato sulla
+     pagina, perche' non tutti i social digeriscono il WebP.
+     ATTENZIONE: l'anteprima funziona solo a sito pubblicato; da localhost non
+     si puo' provare. Se cambi la foto, cambia anche il nome del file (es.
+     prisma-anteprima-2.jpg): i social tengono in memoria la vecchia per
+     settimane. -->
+<meta property="og:image" content="https://finalstepbitcoin.com/img/prisma-anteprima.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="800">
+<meta property="og:image:alt" content="I due modelli del dispositivo PRISMA, in plastica gialla con i tasti arancioni.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0A0908">
 <link rel="canonical" href="https://finalstepbitcoin.com/prodotti.html">
 <link rel="icon" href="img/favicon-32.png" sizes="32x32">
 <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
-
-<!-- PAGINA NON ANCORA ANNUNCIATA.
-     Finche' non esce il video, questa riga dice ai motori di ricerca di non
-     indicizzarla: l'indirizzo funziona per chi ce l'ha, ma non compare su
-     Google. TOGLIERE QUESTA RIGA il giorno del lancio, insieme alla voce
-     di menu. -->
-<meta name="robots" content="noindex, nofollow">
 
 <link href="font/caratteri.css" rel="stylesheet">
 <link rel="stylesheet" href="stile.css">
@@ -35,6 +41,22 @@
      Tutto quello che serve solo a PRISMA vive qui, cosi' finche' la pagina
      e' una prova non puo' rovinare niente del sito gia' online. -->
 <style>
+  /* ── Quanto sono larghi i testi ──
+       Nel foglio generale i titoli di sezione sono tagliati a 20 caratteri
+       per riga e i paragrafi a 60: su un portatile restavano quasi 500 px
+       vuoti a destra e i titoli lunghi finivano su cinque righe.
+       Qui li allarghiamo SOLO per questa pagina.
+
+       La misura "ch" vuol dire "larghezza di un carattere", e si comporta
+       da sola sui due tipi di schermo: e' un TETTO, non una larghezza fissa.
+       Sul telefono lo schermo e' piu' stretto del tetto, quindi non cambia
+       niente e il testo riempie la riga come prima; sul computer, dove lo
+       spazio c'e', il testo arriva fino al tetto e smette di crescere.
+       Oltre i ~75 caratteri per riga l'occhio fatica a ritrovare l'inizio
+       della riga dopo: e' il motivo per cui non li allarghiamo di piu'. */
+  .titolo-due{max-width:30ch}
+  .lede{max-width:72ch}
+
   /* ── Testata della pagina ── */
   .sin-hero{text-align:center;padding-top:clamp(10px,2vw,26px)}
   .sin-marchio{
@@ -47,10 +69,14 @@
        vuoto a sinistra e 42 a destra. Il centro delle lettere cade a mezzo
        pixel dal centro dell'immagine: nessuna correzione da fare. */
   }
+  /* Il sottotitolo grande sotto il marchio. E' una riga sola e corta: il
+     max-width serve solo a farla andare a capo su schermo stretto, non a
+     spezzarla sul desktop. Se un domani ci rimetti una frase lunga,
+     riabbassalo a 19ch. */
   .sin-claim{
     font-family:var(--display);font-weight:600;
     font-size:clamp(24px,3.6vw,40px);line-height:1.12;letter-spacing:.01em;
-    color:var(--bone);max-width:19ch;margin:0 auto;
+    color:var(--bone);max-width:30ch;margin:0 auto;
   }
   .sin-claim em{
     font-style:normal;
@@ -58,19 +84,75 @@
   }
   .sin-sotto{max-width:62ch;margin:clamp(16px,2vw,22px) auto 0}
 
-  /* ── Riquadro della foto, per ora vuoto ──
-       Quando avrai la foto del dispositivo: metti il file in img/ e sostituisci
-       tutto il blocco <div class="sin-foto"> con
-       <img class="sin-foto-vera" src="img/prisma-foto.webp" alt="Il dispositivo PRISMA acceso">  */
-  .sin-foto{
-    margin:clamp(26px,3.4vw,40px) auto 0;max-width:720px;aspect-ratio:16/10;
-    border:1px dashed var(--line-2);border-radius:var(--r);background:var(--ink-2);
+  /* ── La prima parola di ogni titolo di sezione ──
+       Prende lo stesso gradiente giallo-arancio di "offline" nel sottotitolo.
+       "Scheda tecnica" e' esclusa di proposito: li' la prima riga e' anche
+       l'unica, quindi si colorerebbe il titolo intero invece della sola
+       parola d'apertura, e non sarebbe piu' lo stesso effetto degli altri.
+       Il "color" prima del gradiente non e' un doppione: e' la rete di
+       sicurezza per i browser che non sanno ritagliare uno sfondo dentro le
+       lettere, che altrimenti mostrerebbero il testo trasparente. */
+  .sec:not(#scheda-tecnica) .titolo-due .t-su{
+    color:var(--yellow);
+    background:var(--grad);-webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;
+  }
+
+  /* ── La foto del dispositivo ──
+       Il file e' img/prisma-foto.webp (1536x1024, WebP): e' la risoluzione
+       piena dell'originale, che sta in FILE DA INSERIRE NEL SITO.
+       NIENTE max-width: la foto arriva larga quanto il contenitore, come le
+       schede e i riquadri del resto della pagina. Con un tetto piu' basso
+       restava una fascia vuota ai lati che nelle altre pagine del sito non
+       c'e'. Se un domani la cambi: stesse proporzioni 3:2, e aggiorna i
+       numeri width/height nel tag <img>, che servono al browser per tenere
+       lo spazio prima ancora di aver scaricato la foto. */
+  .sin-foto-vera{width:100%;height:auto;display:block;margin:clamp(26px,3.4vw,40px) auto 0;border-radius:var(--r)}
+
+  /* ── Lo spazio del video tutorial (sezione "Cosa fa") ──
+       Oggi e' un riquadro vuoto tratteggiato. Le istruzioni per riempirlo,
+       col codice gia' pronto da incollare, stanno nel commento accanto al
+       riquadro stesso, piu' in basso nel testo della pagina. */
+  .sin-video{margin-top:clamp(30px,3.8vw,46px)}
+  .sin-video-tit{
+    font-family:var(--mono);font-size:11px;letter-spacing:.13em;
+    text-transform:uppercase;color:var(--mute-2);
+    margin:0 0 12px;text-align:center;font-weight:400;
+  }
+  .sin-video-box{
+    aspect-ratio:16/9;border:1px dashed var(--line-2);border-radius:var(--r);
+    background:var(--ink-2);
     display:flex;align-items:center;justify-content:center;text-align:center;padding:20px;
   }
-  .sin-foto span{
-    font-family:var(--mono);font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--mute-2);
+  .sin-video-box span{
+    font-family:var(--mono);font-size:11px;letter-spacing:.13em;
+    text-transform:uppercase;color:var(--mute-2);
   }
-  .sin-foto-vera{width:100%;max-width:720px;height:auto;display:block;margin:clamp(26px,3.4vw,40px) auto 0;border-radius:var(--r)}
+  /* ── Come sara' il video una volta inserito ──
+       Questi stili sono gia' pronti e non fanno niente finche' il riquadro
+       resta vuoto: servono al blocco da incollare, descritto piu' sotto. */
+  .sin-video-vero{
+    position:relative;display:block;aspect-ratio:16/9;width:100%;
+    border-radius:var(--r);overflow:hidden;background:#000;
+    border:1px solid var(--line);
+  }
+  .sin-video-vero img{width:100%;height:100%;object-fit:cover;display:block}
+  /* Il triangolo del "play": senza, la miniatura sembra una foto qualsiasi */
+  .sin-video-play{
+    position:absolute;inset:0;margin:auto;width:74px;height:74px;
+    display:flex;align-items:center;justify-content:center;
+    background:rgba(19,17,16,.72);border:1px solid var(--line-2);border-radius:50%;
+    transition:transform .18s ease,background .18s ease;
+  }
+  .sin-video-play svg{width:30px;height:30px;fill:var(--bone);margin-left:4px}
+  .sin-video-vero:hover .sin-video-play{transform:scale(1.08);background:rgba(19,17,16,.85)}
+
+  /* ── Il bottone sotto la foto ──
+       Si centra da solo perche' tutta la testata (.sin-hero) e' centrata.
+       Porta alla sezione "Averlo" in fondo alla pagina: lo scorrimento
+       morbido e la fermata sotto la barra in alto arrivano gia' da
+       stile.css, qui non serve aggiungere niente. */
+  .sin-cta{margin:clamp(24px,3vw,32px) 0 0}
 
   /* ── Elenco a passi, per i tre livelli di verifica ── */
   .sin-passi{list-style:none;display:grid;gap:13px;counter-reset:passo}
@@ -87,7 +169,6 @@
   }
   .sin-passo h3{font-size:clamp(16px,1.7vw,19px);margin:0 0 6px;color:var(--bone)}
   .sin-passo p{margin:0;color:var(--mute);font-size:clamp(14.5px,1.5vw,16px);line-height:1.62}
-  .sin-passo--nota .sin-passo-n{background:none;border:1px solid var(--line-2);color:var(--mute-2)}
 
   /* ── Riquadro "cosa NON fa": stesso stile delle schede, bordo spento ── */
   .sin-limiti{list-style:none;display:grid;gap:11px;margin:0}
@@ -102,7 +183,6 @@
   }
 
   /* ── Scheda tecnica: due righe da quattro su schermo grande ── */
-  .sin-dati{margin-top:clamp(22px,2.6vw,30px)}
 
   /* ── I DUE BLOCCHI DELL'ULTIMA SEZIONE ──
        Affiancati sopra i 760 px, uno sopra l'altro sotto. "align-items:
@@ -209,17 +289,9 @@
 </div>
 
 <!-- ══════════ NAV ══════════
-     Identica a quella di risorse.html. NOTA: qui NON c'e' la voce "Prodotti"
-     e nessuna voce e' accesa, perche' per ora la pagina e' nascosta.
-
-     IL GIORNO DEL LANCIO, per accendere la voce di menu, aggiungi questa
-     riga in TUTTE E TRE le pagine, sempre nello stesso punto (qui sotto io
-     l'ho messa prima di "Risorse"):
-         <a href="prodotti.html">Prodotti</a>
-     - in index.html e in risorse.html va cosi' com'e';
-     - QUI dentro va invece con la voce accesa:
-         <a href="prodotti.html" class="on">Prodotti</a>
-     E ricordati di togliere la riga "noindex" in cima al file. -->
+     Identica a quella di risorse.html, con in piu' la voce "Prodotti" prima
+     di "Risorse": qui accesa (class="on"), in index.html e risorse.html no.
+     Le tre nav vanno tenute allineate a mano. -->
 <div class="nav-shell">
   <nav>
     <a href="index.html" class="brand">
@@ -235,6 +307,7 @@
       <a href="index.html#supportami">Supportami</a>
       <a href="index.html#consulenze">Consulenze</a>
       <a href="index.html#contatti">Contatti</a>
+      <a href="prodotti.html" class="on">Prodotti</a>
       <a href="risorse.html">Risorse</a>
     </div>
     <button class="burger" id="burger" aria-label="Apri il menu" aria-expanded="false" aria-controls="navlinks">&#9776;</button>
@@ -250,18 +323,23 @@
 
     <div class="sin-hero rise">
       <h1 class="titolo-pagina" style="margin:0">
-        <img class="sin-marchio" src="img/prisma-marchio.png" width="870" height="456" alt="PRISMA">
+        <img class="sin-marchio" src="img/prisma-marchio.png?v=2" width="870" height="456" alt="PRISMA">
       </h1>
-      <p class="sin-claim">L'ultima parola della tua seed, <em>senza accendere un computer</em>.</p>
+      <p class="sin-claim">Il tuo calcolatore <em>offline</em></p>
       <p class="lede sin-sotto">
-        Un dispositivo piccolo, senza radio e senza memoria, che fa una cosa sola:
-        completa la tua frase di recupero BIP39 e ti aiuta a costruire la passphrase
-        coi dadi. Poi lo stacchi, e non resta niente.
+        L'ultima parola della tua mnemonica, la conversione dei dadi per la tua
+        passphrase. Tutto senza un computer e senza internet. Un dispositivo
+        piccolo, senza Wi-Fi, Bluetooth e memoria, che fa due cose: completa la
+        tua mnemonica BIP39 e ti aiuta a costruire la passphrase coi dadi. Poi
+        lo scolleghi e lui non salva niente.
       </p>
 
-      <!-- Qui va la foto del dispositivo, appena ce l'hai. Istruzioni nel
-           blocco <style> in cima, alla voce "Riquadro della foto". -->
-      <div class="sin-foto"><span>Qui va la foto del dispositivo</span></div>
+      <img class="sin-foto-vera" src="img/prisma-foto.webp" width="1536" height="1024"
+           alt="I due modelli del dispositivo PRISMA, in plastica gialla con i tasti arancioni: uno in piedi visto di fronte, l'altro appoggiato di tre quarti.">
+
+      <div class="sin-cta">
+        <a class="btn btn--fill" href="#ordina">Come averlo</a>
+      </div>
     </div>
 
   </div>
@@ -275,22 +353,25 @@
   <div class="wrap">
     <div class="sec-head rise">
       <h2 class="titolo-due">
-        <span class="t-su">Il problema</span>
-        Manca sempre l'ultima parola
+        <span class="t-su">La difficoltà</span>
+        Generare in autonomia l'ultima parola BIP39 e la passphrase
       </h2>
     </div>
     <p class="lede rise">
-      Se generi la tua frase di recupero a mano — coi dadi, con le monete, senza
-      fidarti di nessun programma — arrivi a <strong>11 parole</strong> (o a 23) e
-      lì ti fermi. L'ultima non è una parola qualsiasi che puoi scegliere a gusto:
-      contiene il <em>checksum</em>, il codice di controllo che dice al portafoglio
-      che tutte le altre sono scritte giuste. Sbagliarla significa che il
-      portafoglio rifiuta la frase.
+      Se generi la tua mnemonica a mano — coi dadi o con altri strumenti —
+      arrivi a <strong>11 o 23 parole</strong>, poi ti fermi. L'ultima contiene
+      il <em>checksum</em>, un codice di controllo che permette di accorgersi se
+      una parola è stata trascritta male o cambiata.
     </p>
     <p class="lede rise">
-      Per calcolarla serve un computer. Ed è esattamente la macchina che, in quel
-      preciso momento, non vorresti accendere. <strong>PRISMA fa solo quel
-      calcolo</strong>, su un dispositivo che non ha modo di parlare con il mondo.
+      Per calcolarla serve un computer. Ma l'obiettivo è non averne bisogno.
+      <strong>PRISMA si occupa di calcolare il checksum</strong>, su un
+      dispositivo completamente isolato.
+    </p>
+    <p class="lede rise">
+      Inoltre ti aiuta anche a generare la tua passphrase, traducendo il lancio
+      dei dadi in parole, senza impazzire nella ricerca, sullo stesso
+      dispositivo scollegato.
     </p>
   </div>
 </section>
@@ -306,12 +387,13 @@
     <div class="sec-head rise">
       <h2 class="titolo-due">
         <span class="t-su">Cosa fa</span>
-        Due modalità, niente di più
+        Ultima parola BIP39 e passphrase, due sessioni separate
       </h2>
     </div>
     <p class="lede rise" style="margin-bottom:clamp(28px,3.5vw,40px)">
-      Si usano in <strong>sessioni separate</strong>, staccando il cavo in mezzo:
-      così il dispositivo non ha mai in memoria tutte e due le metà del segreto.
+      <strong>Staccando il cavo in mezzo</strong>, anche la memoria temporanea
+      viene resettata: non rimangono mai nel dispositivo tutte e due le
+      informazioni contemporaneamente.
     </p>
 
     <div class="risorse rise">
@@ -321,18 +403,18 @@
           <span class="ris-code">01</span>
           <span class="ris-tag ris-tag--nostra">Checksum BIP39</span>
         </div>
-        <h3 class="ris-name">Completa la frase di recupero</h3>
+        <h3 class="ris-name">Completa la mnemonica</h3>
         <p class="ris-desc">
           Inserisci le prime 11 parole e il dispositivo ti mostra le
-          <strong>128 candidate</strong> valide in 3,5 secondi; con 23 parole
-          restano <strong>8 candidate</strong>, in 6,3 secondi. A quel punto
+          <strong>128 candidate</strong> valide; con 23 parole restano
+          <strong>8 candidate</strong>. A quel punto
           inserisci i bit di entropia che ti sono avanzati — 7 per la frase da 12
           parole, 3 per quella da 24 — e la parola giusta è una sola.
         </p>
         <p class="ris-desc">
-          Quei bit non sono un dettaglio tecnico: <strong>sono entropia che hai già
-          generato tu</strong> coi dadi e che è rimasta sul foglio. Scegliere invece
-          la parola "che suona meglio" significa buttarla via.
+          Quei bit sono <strong>entropia che hai generato tu coi dadi</strong> e che
+          non hai ancora usato. Scegliere una parola a caso significa buttare via
+          entropia.
         </p>
       </article>
 
@@ -357,6 +439,34 @@
       </article>
 
     </div>
+
+    <!-- ══ IL VIDEO TUTORIAL ══
+         SCELTA FATTA: miniatura che porta a YouTube, come nella home. Il
+         video NON parte dentro la pagina, e finche' nessuno clicca YouTube
+         non sa che quella persona e' passata di qui: nessun cookie, niente
+         da aggiungere all'avviso sui cookie.
+
+         Video: https://youtu.be/CFRjoe49_qk  (ID: CFRjoe49_qk)
+         Lo stesso indirizzo e' stampato nel QR in fondo alla guida di
+         carta, quindi NON si cancella e non si ricarica quel video: se un
+         giorno va rifatto, si sostituisce il contenuto tenendo lo stesso
+         video, altrimenti YouTube assegna un ID nuovo e i fogli gia'
+         stampati portano nel vuoto.
+
+         SE LA MINIATURA RESTA NERA: finche' il video e' privato o
+         programmato, YouTube non pubblica la sua immagine e il riquadro
+         resta vuoto: e' normale, si riempie da solo quando il video
+         diventa pubblico. Se resta nera anche dopo, quel video non ha la
+         versione grande dell'immagine: cambia maxresdefault.jpg in
+         hqdefault.jpg, che esiste sempre. -->
+    <div class="sin-video rise">
+      <p class="sin-video-tit">Il video tutorial</p>
+      <a class="sin-video-vero" href="https://youtu.be/CFRjoe49_qk" target="_blank" rel="noopener">
+        <img src="https://img.youtube.com/vi/CFRjoe49_qk/maxresdefault.jpg" alt="Il video tutorial di PRISMA" loading="lazy">
+        <span class="sin-video-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
+      </a>
+    </div>
+
   </div>
 </section>
 
@@ -369,22 +479,22 @@
     <div class="sec-head rise">
       <h2 class="titolo-due">
         <span class="t-su">Com'è fatto</span>
-        Offline per costruzione, non per impostazione
+        Offline by design
       </h2>
     </div>
 
     <ul class="sin-limiti rise" style="gap:15px;max-width:80ch">
-      <li><span class="sin-no">✕</span><span><b>Nessuna radio a bordo.</b> Non c'è WiFi da spegnere né Bluetooth da disattivare: il processore scelto non li ha proprio. Non è una impostazione che qualcuno può cambiare.</span></li>
+      <li><span class="sin-no">✕</span><span><b>Nessun trasmettitore a bordo.</b> Non sono presenti né Wi-Fi né Bluetooth da disattivare: il processore scelto non li ha proprio. Non è un'impostazione che qualcuno può cambiare.</span></li>
       <li><span class="sin-no">✕</span><span><b>Non scrive niente nella memoria permanente.</b> Quando stacchi il cavo, quello che hai inserito sparisce. È anche ciò che rende il firmware verificabile: la memoria resta identica a com'era.</span></li>
-      <li><span class="sin-no">✕</span><span><b>Non deriva chiavi né indirizzi.</b> Per scelta non sa fare i conti che portano dalla frase al portafoglio: anche volendo, non può sapere a quale portafoglio appartiene ciò che gli hai scritto.</span></li>
+      <li><span class="sin-no">✕</span><span><b>Non deriva chiavi né indirizzi.</b> Per scelta non sa fare i conti che portano dalla mnemonica al portafoglio: anche volendo, non può sapere a quale portafoglio appartiene ciò che gli hai scritto.</span></li>
       <li><span class="sin-no">✕</span><span><b>Non si collega al computer per funzionare.</b> Si alimenta da un normale caricatore da telefono. Schermo, joystick e quattro tasti: tutto il resto non serve.</span></li>
     </ul>
 
     <p class="lede rise" style="margin-top:clamp(24px,3vw,32px)">
       Alla fine di ogni operazione il dispositivo ti porta a una schermata da cui
       non si torna indietro: l'unico modo di uscire è <strong>staccare il
-      cavo</strong>. Non è una dimenticanza, è voluto — così l'azzeramento della
-      memoria non resta un consiglio che prima o poi qualcuno non segue.
+      cavo</strong>. Non è una dimenticanza, è fatto apposta. In questo modo sei
+      sicuro che venga cancellato tutto.
     </p>
   </div>
 </section>
@@ -402,14 +512,13 @@
   <div class="wrap">
     <div class="sec-head rise">
       <h2 class="titolo-due">
-        <span class="t-su">Perché fidarsi</span>
-        Non devi fidarti di me
+        <span class="t-su">Non fidarti</span>
+        Verifica
       </h2>
     </div>
     <p class="lede rise" style="margin-bottom:clamp(28px,3.5vw,40px)">
-      Un dispositivo che tocca la tua frase di recupero non si compra sulla parola
-      di chi te lo vende — nemmeno sulla mia. Per questo il codice è aperto e ci
-      sono tre modi, in ordine di difficoltà, per non credermi.
+      Il codice è open source e ci sono tre modalità di verifica del dispositivo,
+      in ordine di difficoltà.
     </p>
 
     <ol class="sin-passi rise">
@@ -419,8 +528,8 @@
           <h3>Riscrivilo tu</h3>
           <p>
             Scarichi il firmware ufficiale, lo trascini sul dispositivo, trenta
-            secondi. Non devi installare niente e non devi verificare niente:
-            da quel momento sopra c'è quello che hai messo tu. È la strada più
+            secondi. Non devi installare niente: da quel momento sopra c'è
+            quello che hai messo tu. È la strada più
             semplice ed è anche la più sicura.
           </p>
         </div>
@@ -437,7 +546,7 @@
           </p>
         </div>
       </li>
-      <li class="sin-passo sin-passo--nota">
+      <li class="sin-passo">
         <span class="sin-passo-n">3</span>
         <div>
           <h3>Le tre parole all'avvio</h3>
@@ -451,70 +560,33 @@
         </div>
       </li>
     </ol>
-
-    <p class="lede rise" style="margin-top:clamp(24px,3vw,32px)">
-      In più, ogni dispositivo che spedisco ha un numero di serie con la sua
-      attestazione firmata e pubblicata su Nostr con la mia chiave: la stessa con
-      cui firmo tutto il resto.
-    </p>
   </div>
 </section>
 
 <hr class="rule">
 
 
-<!-- ══════════ 05 · SCHEDA TECNICA ══════════ -->
-<section class="sec" id="scheda-tecnica">
-  <div class="wrap">
-    <div class="sec-head rise">
-      <h2 class="titolo-due">
-        <span class="t-su">Scheda tecnica</span>
-        I numeri, senza giri di parole
-      </h2>
-    </div>
-
-    <div class="stats sin-dati rise">
-      <div class="stat"><b>3,5s</b><span>128 candidate</span></div>
-      <div class="stat"><b>240px</b><span>schermo a colori</span></div>
-      <div class="stat"><b>0</b><span>radio a bordo</span></div>
-      <div class="stat"><b>0</b><span>byte scritti</span></div>
-    </div>
-
-    <div class="pills rise">
-      <span class="pill">Raspberry Pi Pico 2 · RP2350</span>
-      <span class="pill">Schermo 240×240</span>
-      <span class="pill">Joystick + 4 tasti</span>
-      <span class="pill">Alimentazione micro-USB</span>
-      <span class="pill">MicroPython</span>
-      <span class="pill">Motore derivato da embit</span>
-      <span class="pill">Codice aperto</span>
-      <span class="pill">Riprogrammabile dall'acquirente</span>
-    </div>
-  </div>
-</section>
-
-<hr class="rule">
-
-
-<!-- ══════════ 06 · AVERLO ══════════
+<!-- ══════════ 05 · COME AVERLO ══════════
      DUE BLOCCHI AFFIANCATI: a sinistra la strada gratuita (te lo costruisci),
      a destra quella comoda (te lo mando io). Sotto i 760 px di larghezza si
      mettono uno sopra l'altro da soli, con quello di destra che resta
      secondo: chi legge da telefono vede prima la strada gratuita.
 
-     ⚠ DUE SEGNAPOSTO DA RIEMPIRE PRIMA DI PUBBLICARE. Sono marcati anche
-     nel codice qui sotto con la scritta DA-COLLEGARE:
-       1. l'indirizzo del progetto su GitHub (oggi il repository e' PRIVATO:
-          finche' resta cosi', il link da' pagina non trovata)
-       2. l'indirizzo del prodotto su Barattolo
-     Telegram e' gia' collegato: https://t.me/plakbtc
-     Finche' restano i segnaposto NON si pubblica questa pagina. -->
-<section class="sec sec--alt" id="ordina">
+     Questa sezione viene PRIMA della scheda tecnica, e non e' un caso: la
+     scheda tecnica non convince nessuno, si consulta dopo aver deciso.
+     L'invito ad agire arriva quindi subito dopo "Perche' fidarsi".
+
+     ⚠ UN SEGNAPOSTO ANCORA DA RIEMPIRE, marcato qui sotto con la scritta
+     DA COLLEGARE: l'indirizzo del prodotto su Barattolo. Finche' resta
+     href="#" quel bottone non porta da nessuna parte.
+     Gia' collegati: GitHub (repository pubblico, verificato il 29/08/2026)
+     e Telegram (https://t.me/plakbtc). -->
+<section class="sec" id="ordina">
   <div class="wrap">
     <div class="sec-head rise">
       <h2 class="titolo-due">
-        <span class="t-su">Averlo</span>
-        Costruiscilo, o fattelo mandare
+        <span class="t-su">Come averlo</span>
+        Costruiscilo o ricevilo
       </h2>
     </div>
 
@@ -525,14 +597,13 @@
         <span class="sin-via-tag">Gratis</span>
         <h3 class="sin-via-tit">Costruisciti il dispositivo in autonomia!</h3>
         <p class="sin-via-txt">
-          Il progetto è aperto: schema dei collegamenti, firmware, dizionari e
-          istruzioni sono tutti pubblici. Le parti costano una quindicina di
-          euro e si trovano ovunque, non serve saldare niente e il firmware si
-          carica trascinando un file. Se te lo fai da solo non devi fidarti di
-          me su niente.
+          Il progetto è open source: schema dei collegamenti, firmware, dizionari
+          e istruzioni sono tutti su GitHub. Le parti costano una ventina di euro
+          e si trovano ovunque, non serve saldare niente e il firmware si carica
+          trascinando un file. Se te lo fai da solo hai maggiore controllo sul
+          firmware.
         </p>
         <div class="sin-via-fondo">
-          <!-- DA-COLLEGARE 1: indirizzo del progetto su GitHub -->
           <a class="ris-via" href="https://github.com/Finalstepbitcoin/prisma" target="_blank" rel="noopener">
             <span class="ris-ic">
               <svg viewBox="0 0 24 24" fill="none" stroke="#FA9D07" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></svg>
@@ -543,7 +614,6 @@
             </span>
             <span class="ris-x" aria-hidden="true">↗</span>
           </a>
-          <span class="sin-da-decidere">Repository ancora privato</span>
         </div>
       </article>
 
@@ -572,7 +642,8 @@
           </p>
           <div class="sin-bottoni">
             <a class="btn btn--fill" href="https://t.me/plakbtc" target="_blank" rel="noopener">Scrivimi su Telegram</a>
-            <!-- DA-COLLEGARE 2: indirizzo del prodotto su Barattolo -->
+            <!-- DA COLLEGARE: indirizzo del prodotto su Barattolo. Finche'
+               resta href="#" il bottone non porta da nessuna parte. -->
             <a class="btn btn--line" href="#" target="_blank" rel="noopener">Compralo su Barattolo</a>
           </div>
           <span class="sin-da-decidere">Barattolo da collegare</span>
@@ -602,6 +673,32 @@
       </p>
     </div>
 
+  </div>
+</section>
+
+<hr class="rule">
+
+
+<!-- ══════════ 06 · SCHEDA TECNICA ══════════ -->
+<section class="sec sec--alt" id="scheda-tecnica">
+  <div class="wrap">
+    <div class="sec-head rise">
+      <h2 class="titolo-due">
+        <span class="t-su">Scheda tecnica</span>
+      </h2>
+    </div>
+
+    <div class="pills rise">
+      <span class="pill">Raspberry Pi Pico 2 · RP2350</span>
+      <span class="pill">Schermo 240×240</span>
+      <span class="pill">Joystick + 4 tasti</span>
+      <span class="pill">Alimentazione micro-USB</span>
+      <span class="pill">Case in stampa 3D</span>
+      <span class="pill">MicroPython</span>
+      <span class="pill">Motore derivato da embit</span>
+      <span class="pill">Codice aperto</span>
+      <span class="pill">Riprogrammabile dall'acquirente</span>
+    </div>
   </div>
 </section>
 
