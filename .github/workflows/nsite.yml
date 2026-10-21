@@ -132,6 +132,11 @@ jobs:
         # bunker. Al livello normale (21/10/2026) si fermava per due falsi
         # allarmi: la chiave PUBBLICA di PLAK in index.html (serve a leggere gli
         # articoli) e la frase "passphrase: cinque dadi" in risorse.html.
+        # ATTENZIONE: in nsyte 0.28.1 --publish-relay-list e
+        # --publish-server-list vengono ignorati in silenzio (difetto: quella
+        # parte gira solo con --publish-app-handler, che non vogliamo). Il sito
+        # funziona lo stesso: verificato il 21/10/2026 su nsite.lol, nsite.run e
+        # nsite.cloud. Restano qui per quando una versione nuova li sistemera'.
         env:
           NSITE_NSEC: ${{ secrets.NSITE_NSEC }}
           PROVA: ${{ inputs.prova && '--dry-run' || '' }}
