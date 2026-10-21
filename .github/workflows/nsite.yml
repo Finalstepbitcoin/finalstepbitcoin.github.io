@@ -62,12 +62,15 @@ jobs:
         # Gli stessi file del sito, tranne quelli che servono solo a GitHub
         # (CNAME, .gitignore, .github/), le note LEGGIMI e il file con cui
         # TikTok verifica il dominio.
+        # La cartella deve stare QUI e con un nome relativo: nsyte attacca
+        # sempre il percorso alla cartella corrente, e con un percorso assoluto
+        # (prova del 21/10/2026) cercava altrove e trovava 0 file.
         run: |
-          mkdir -p "$RUNNER_TEMP/sito"
+          mkdir -p sito-nostr
           git ls-files -z \
             | grep -zvE '^(\.gitignore|CNAME|\.github/.*|tiktok[^/]*\.txt)$|(^|/)LEGGIMI[^/]*$' \
-            | xargs -0 cp --parents -t "$RUNNER_TEMP/sito"
-          echo "File da pubblicare: $(find "$RUNNER_TEMP/sito" -type f | wc -l)"
+            | xargs -0 cp --parents -t sito-nostr
+          echo "File da pubblicare: $(find sito-nostr -type f | wc -l)"
 
       - name: Scarica nsyte alla versione controllata
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -93,7 +96,7 @@ jobs:
           deno run --frozen --no-prompt \
             --config=.nsyte/deno.json --lock=.nsyte/deno.lock \
             --allow-read --allow-write --allow-net --allow-env --allow-sys \
-            .nsyte/src/cli.ts deploy "$RUNNER_TEMP/sito" \
+            .nsyte/src/cli.ts deploy sito-nostr \
             --non-interactive --no-config --sync \
             --sec "$NSITE_NSEC" \
             --relays "$RELAY" --servers "$SERVER" \
