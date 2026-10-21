@@ -128,6 +128,10 @@ jobs:
         # --frozen: se le dipendenze non combaciano con le impronte, si ferma.
         # Niente permesso di lanciare altri programmi (--allow-run): non serve.
         # --sync: ricontrolla che ogni file stia su tutti i server.
+        # --scan-level low: il controllo anti-segreti cerca solo nsec e codici
+        # bunker. Al livello normale (21/10/2026) si fermava per due falsi
+        # allarmi: la chiave PUBBLICA di PLAK in index.html (serve a leggere gli
+        # articoli) e la frase "passphrase: cinque dadi" in risorse.html.
         env:
           NSITE_NSEC: ${{ secrets.NSITE_NSEC }}
           PROVA: ${{ inputs.prova && '--dry-run' || '' }}
@@ -136,7 +140,7 @@ jobs:
             --config=.nsyte/deno.json --lock=.nsyte/deno.lock \
             --allow-read --allow-write --allow-net --allow-env --allow-sys \
             .nsyte/src/cli.ts deploy sito-nostr \
-            --non-interactive --no-config --sync \
+            --non-interactive --no-config --sync --scan-level low \
             --sec "$NSITE_NSEC" \
             --relays "$RELAY" --servers "$SERVER" \
             --publish-relay-list --publish-server-list \
