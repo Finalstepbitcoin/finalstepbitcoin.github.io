@@ -85,6 +85,45 @@ jobs:
         with:
           deno-version: 2.9.7
 
+      - name: Controlla che la chiave sia quella del sito
+        # Se nel segreto finisse un'altra chiave (per esempio quella personale
+        # di PLAK), il compito si ferma qui, prima di pubblicare qualsiasi cosa.
+        # Gira anche nella prova generale, che altrimenti la chiave non la usa.
+        env:
+          NSITE_NSEC: ${{ secrets.NSITE_NSEC }}
+          ATTESA: 30e5bb3cf754ed49dd3422abfed87f030b08eed545e307580da90638e291ef92
+        run: |
+          cat > "$RUNNER_TEMP/verifica.ts" <<'FINE'
+          import { bech32 } from "@scure/base";
+          import { schnorr } from "@noble/curves/secp256k1";
+          let pub = "";
+          try {
+            const s = (Deno.env.get("NSITE_NSEC") ?? "").trim();
+            let chiave: Uint8Array;
+            if (/^[0-9a-f]{64}$/i.test(s)) {
+              chiave = Uint8Array.from(s.match(/../g)!.map((h) => parseInt(h, 16)));
+            } else {
+              const { prefix, words } = bech32.decode(s as `${string}1${string}`);
+              if (prefix !== "nsec") throw new Error();
+              chiave = Uint8Array.from(bech32.fromWords(words));
+            }
+            pub = Array.from(schnorr.getPublicKey(chiave), (b) => b.toString(16).padStart(2, "0")).join("");
+          } catch {
+            // Messaggio generico apposta: l'errore originale potrebbe citare il segreto.
+            console.error("FERMO: il segreto NSITE_NSEC non contiene una nsec valida.");
+            Deno.exit(1);
+          }
+          if (pub !== Deno.env.get("ATTESA")) {
+            console.error("FERMO: la chiave nel segreto NSITE_NSEC non e' quella del sito.");
+            Deno.exit(1);
+          }
+          console.log("Chiave giusta: firmera' come " + pub.slice(0, 8) + "...");
+          FINE
+          deno run --frozen --no-prompt \
+            --config=.nsyte/deno.json --lock=.nsyte/deno.lock \
+            --allow-env=NSITE_NSEC,ATTESA \
+            "$RUNNER_TEMP/verifica.ts"
+
       - name: Pubblica su Nostr
         # --frozen: se le dipendenze non combaciano con le impronte, si ferma.
         # Niente permesso di lanciare altri programmi (--allow-run): non serve.
