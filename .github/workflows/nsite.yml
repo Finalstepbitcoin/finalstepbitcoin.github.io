@@ -1,0 +1,101 @@
+# Pubblica la copia del sito su Nostr (nsite), firmata con la chiave
+# dedicata al sito ("Sito Internet", npub1xrjmk08h...), mai con quella
+# personale di PLAK.
+#
+# Parte da solo:
+#   - a ogni modifica pubblicata su main;
+#   - quando il compito dei video (video.yml) ha pubblicato qualcosa: e' lui
+#     a chiamarlo, perche' per regola di GitHub le modifiche fatte da un
+#     compito non ne fanno partire altri da sole.
+# Si puo' lanciare anche a mano: scheda "Actions" del repository -> questo
+# compito -> "Run workflow". Con la casella "prova" spuntata fa solo la prova
+# generale: mostra cosa pubblicherebbe, senza caricare ne' pubblicare niente.
+#
+# La chiave segreta sta nel segreto NSITE_NSEC del repository (Settings ->
+# Secrets and variables -> Actions) e non va scritta in nessun file.
+#
+# nsyte, il programma che pubblica, NON si scarica gia' pronto: si prende il
+# suo codice sorgente a un punto preciso (versione 0.28.1, controllata il
+# 21/10/2026) e lo si avvia con l'elenco delle sue dipendenze bloccate dalle
+# impronte (deno.lock). Se anche un solo pezzo fosse diverso, il compito si
+# fermerebbe invece di pubblicare. Per passare a una versione nuova di nsyte:
+# prima rifare il controllo, poi cambiare NSYTE_COMMIT qui sotto.
+
+name: Copia del sito su Nostr
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      prova:
+        description: "Solo prova generale (non pubblica niente)"
+        type: boolean
+        default: false
+
+# Mai due pubblicazioni insieme: la seconda aspetta che finisca la prima.
+concurrency:
+  group: nsite
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  NSYTE_COMMIT: bf0f99d058b89720aaa50b22226ccd481b5ee4ef # nsyte v0.28.1
+  # Relay e server dei file: sono quelli che avevano accettato il sito
+  # pubblicato a mano il 26/08/2026 (relay.nostr.band e il relay della
+  # community allora l'avevano rifiutato).
+  RELAY: wss://nsite.run,wss://relay.damus.io,wss://nos.lol,wss://relay.primal.net,wss://relay.nsite.lol
+  SERVER: https://nsite.run,https://blssm.us,https://nostr.download
+
+jobs:
+  pubblica:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Scarica il sito
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Prepara la cartella da pubblicare
+        # Gli stessi file del sito, tranne quelli che servono solo a GitHub
+        # (CNAME, .gitignore, .github/), le note LEGGIMI e il file con cui
+        # TikTok verifica il dominio.
+        run: |
+          mkdir -p "$RUNNER_TEMP/sito"
+          git ls-files -z \
+            | grep -zvE '^(\.gitignore|CNAME|\.github/.*|tiktok[^/]*\.txt)$|(^|/)LEGGIMI[^/]*$' \
+            | xargs -0 cp --parents -t "$RUNNER_TEMP/sito"
+          echo "File da pubblicare: $(find "$RUNNER_TEMP/sito" -type f | wc -l)"
+
+      - name: Scarica nsyte alla versione controllata
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: sandwichfarm/nsyte
+          ref: ${{ env.NSYTE_COMMIT }}
+          path: .nsyte
+          persist-credentials: false
+
+      - name: Installa Deno
+        uses: denoland/setup-deno@22d081ff2d3a40755e97629de92e3bcbfa7cf2ed # v2.0.5
+        with:
+          deno-version: 2.9.7
+
+      - name: Pubblica su Nostr
+        # --frozen: se le dipendenze non combaciano con le impronte, si ferma.
+        # Niente permesso di lanciare altri programmi (--allow-run): non serve.
+        # --sync: ricontrolla che ogni file stia su tutti i server.
+        env:
+          NSITE_NSEC: ${{ secrets.NSITE_NSEC }}
+          PROVA: ${{ inputs.prova && '--dry-run' || '' }}
+        run: |
+          deno run --frozen --no-prompt \
+            --config=.nsyte/deno.json --lock=.nsyte/deno.lock \
+            --allow-read --allow-write --allow-net --allow-env --allow-sys \
+            .nsyte/src/cli.ts deploy "$RUNNER_TEMP/sito" \
+            --non-interactive --no-config --sync \
+            --sec "$NSITE_NSEC" \
+            --relays "$RELAY" --servers "$SERVER" \
+            --publish-relay-list --publish-server-list \
+            $PROVA

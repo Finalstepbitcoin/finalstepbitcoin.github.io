@@ -26,6 +26,8 @@ on:
 
 permissions:
   contents: write
+  # Serve solo per far ripartire la copia su Nostr (nsite.yml).
+  actions: write
 
 jobs:
   aggiorna:
@@ -38,6 +40,8 @@ jobs:
         run: python3 .github/scripts/aggiorna-video.py
 
       - name: Pubblica, ma solo se e' cambiato qualcosa
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           if [ -z "$(git status --porcelain index.html)" ]; then
             echo "Nessun video nuovo: non pubblico niente."
@@ -48,3 +52,6 @@ jobs:
           git add index.html
           git commit -m "Video: aggiornato l'elenco dal canale YouTube"
           git push
+          # Le modifiche pubblicate da un compito non ne fanno partire altri
+          # (regola di GitHub): la copia su Nostr va chiamata esplicitamente.
+          gh workflow run nsite.yml --ref main
